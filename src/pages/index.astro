@@ -355,8 +355,14 @@ const journey = [
     <ProjectDialog />
     <script>
       import { initializeUI } from '../scripts/ui';
-      const dispose = initializeUI();
-      if (import.meta.hot) import.meta.hot.dispose(dispose);
+      import { initializeMotion } from '../scripts/motion';
+      const disposeUI = initializeUI();
+      const disposeMotion = initializeMotion();
+      if (import.meta.hot)
+        import.meta.hot.dispose(() => {
+          disposeMotion();
+          disposeUI();
+        });
     </script>
   </body>
 </html>
