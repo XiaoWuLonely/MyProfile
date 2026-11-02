@@ -1,6 +1,11 @@
 html {
   scrollbar-gutter: stable;
 }
+.site-header[data-scrolled],
+.site-header:has(.site-nav[data-open]) {
+  background: #f5eddfed;
+  backdrop-filter: blur(10px);
+}
 body[data-dialog-open] {
   overflow: hidden;
 }
@@ -122,5 +127,16 @@ html:not(.has-js) .copy-email {
   .dialog-footnote span {
     display: block;
     margin-top: 12px;
+  }
+}
+@media (max-width: 360px) {
+  .has-js .site-header {
+    gap: 8px;
+  }
+  .has-js .wordmark {
+    font-size: 19px;
+  }
+  .has-js .brand-seed {
+    font-size: 20px;
   }
 }

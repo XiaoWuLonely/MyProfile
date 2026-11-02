@@ -42,6 +42,9 @@ export function initializeUI() {
       for (const entry of entries) {
         if (!entry.isIntersecting) continue;
         const chapter = entry.target as HTMLElement;
+        document
+          .querySelector('.site-header')
+          ?.toggleAttribute('data-scrolled', chapter.id !== 'home');
         const label = document.querySelector('.reading-current');
         if (label) label.textContent = chapter.dataset.chapter ?? '';
         nav?.querySelectorAll('a').forEach((link) => {
@@ -88,6 +91,31 @@ export function initializeUI() {
     dialog
       .querySelector('.dialog-close')
       ?.addEventListener('click', () => dialog.close(), { signal });
+    dialog.addEventListener(
+      'keydown',
+      (event) => {
+        if (event.key !== 'Tab') return;
+        const focusable = [
+          ...dialog.querySelectorAll<HTMLElement>(
+            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+          ),
+        ].filter((element) => element.getClientRects().length > 0);
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (
+          event.shiftKey &&
+          (document.activeElement === first ||
+            !dialog.contains(document.activeElement))
+        ) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      },
+      { signal },
+    );
     dialog.addEventListener(
       'click',
       (event) => {

@@ -138,7 +138,27 @@ export function initializeMotion() {
       return () => document.removeEventListener('visibilitychange', visibility);
     },
   );
-  const onLoad = () => ScrollTrigger.refresh();
+  let anchorFrame = 0;
+  const alignHash = () => {
+    const hash = location.hash;
+    ScrollTrigger.refresh();
+    cancelAnimationFrame(anchorFrame);
+    anchorFrame = requestAnimationFrame(() => {
+      if (!hash || hash !== location.hash) return;
+      try {
+        document
+          .getElementById(decodeURIComponent(hash.slice(1)))
+          ?.scrollIntoView({ block: 'start', behavior: 'auto' });
+      } catch {
+        /* A malformed external hash must not interrupt the page. */
+      }
+    });
+  };
+  const onLoad = () => {
+    if (location.hash) alignHash();
+    else ScrollTrigger.refresh();
+  };
+  window.addEventListener('hashchange', alignHash);
   window.addEventListener('load', onLoad, { once: true });
   document.fonts.ready.then(() => {
     if (!disposed) ScrollTrigger.refresh();
@@ -149,6 +169,8 @@ export function initializeMotion() {
     media.revert();
     progress.revert();
     window.removeEventListener('load', onLoad);
+    window.removeEventListener('hashchange', alignHash);
+    cancelAnimationFrame(anchorFrame);
     delete document.documentElement.dataset.motion;
   };
 }
