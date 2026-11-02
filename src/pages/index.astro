@@ -356,10 +356,13 @@ const journey = [
     <script>
       import { initializeUI } from '../scripts/ui';
       import { initializeMotion } from '../scripts/motion';
+      import { initializeScene } from '../scripts/scene-loader';
       const disposeUI = initializeUI();
       const disposeMotion = initializeMotion();
+      const disposeScene = initializeScene();
       if (import.meta.hot)
         import.meta.hot.dispose(() => {
+          disposeScene();
           disposeMotion();
           disposeUI();
         });
