@@ -1,0 +1,126 @@
+html {
+  scrollbar-gutter: stable;
+}
+body[data-dialog-open] {
+  overflow: hidden;
+}
+.project-dialog {
+  width: min(780px, calc(100vw - 40px));
+  max-height: calc(100svh - 64px);
+  padding: 0;
+  border: 1px solid var(--line);
+  background: var(--paper-light);
+  color: var(--ink);
+  overflow: auto;
+  overscroll-behavior: contain;
+  box-shadow: 0 28px 100px #30251b33;
+}
+.project-dialog::backdrop {
+  background: #302a2380;
+  backdrop-filter: blur(5px);
+}
+.dialog-paper {
+  padding: 22px 48px 32px;
+}
+.dialog-toolbar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: space-between;
+  background: var(--paper-light);
+  z-index: 1;
+  padding-block: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.dialog-toolbar > p {
+  color: var(--rust);
+  font-size: 9px;
+}
+.dialog-close {
+  min-width: 66px;
+  min-height: 44px;
+  background: transparent;
+  font-size: 12px;
+}
+.dialog-close span {
+  font-size: 23px;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+.dialog-content .project-story {
+  border: 0;
+  padding: 32px 0;
+}
+.dialog-content .project-story > h2 {
+  font-size: 44px;
+}
+.dialog-footnote {
+  font-size: 11px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.dialog-footnote span {
+  font: italic 20px/1 var(--serif);
+}
+.story-screenshot {
+  width: 100%;
+  margin-top: 28px;
+  border: 1px solid var(--line);
+}
+html:not(.has-js) .copy-email {
+  display: none;
+}
+@media (max-width: 680px) {
+  .has-js .menu-toggle {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    gap: 8px;
+    margin-left: auto;
+    background: transparent;
+    font-size: 11px;
+  }
+  .has-js .site-nav {
+    display: none;
+  }
+  .has-js .site-nav[data-open] {
+    display: flex;
+    padding-block: 8px;
+  }
+  .has-js .site-header {
+    gap: 12px;
+  }
+  .has-js .resume-link {
+    margin-left: 0;
+    padding-inline: 10px;
+  }
+  .has-js .resume-link span {
+    padding-left: 3px;
+  }
+  .has-js .wordmark {
+    font-size: 21px;
+  }
+  .project-dialog {
+    width: calc(100vw - 24px);
+    max-height: calc(100svh - 32px);
+  }
+  .dialog-paper {
+    padding: 10px 22px 26px;
+  }
+  .dialog-content .project-story > h2 {
+    font-size: 36px;
+  }
+  .dialog-footnote {
+    display: block;
+  }
+  .dialog-footnote span {
+    display: block;
+    margin-top: 12px;
+  }
+}

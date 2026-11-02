@@ -3,8 +3,10 @@ import { Image } from 'astro:assets';
 import '@fontsource/cormorant-garamond/500.css';
 import '@fontsource/cormorant-garamond/500-italic.css';
 import '../styles/global.css';
+import '../styles/interactions.css';
 import ProjectGallery from '../components/ProjectGallery.astro';
 import Botanical from '../components/Botanical.astro';
+import ProjectDialog from '../components/ProjectDialog.astro';
 import hero from '../assets/home-hero.png';
 import about from '../assets/about-art.png';
 import contact from '../assets/contact-art.png';
@@ -350,5 +352,11 @@ const journey = [
       </span>
       <span>慢慢来，也很好。</span>
     </div>
+    <ProjectDialog />
+    <script>
+      import { initializeUI } from '../scripts/ui';
+      const dispose = initializeUI();
+      if (import.meta.hot) import.meta.hot.dispose(dispose);
+    </script>
   </body>
 </html>
