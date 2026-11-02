@@ -1,0 +1,14 @@
+Paper & Pixels — third-party software notices
+
+Three.js (MIT): https://github.com/mrdoob/three.js
+Full MIT license: /licenses/three.txt
+
+GSAP and ScrollTrigger: Standard No Charge GSAP License
+https://gsap.com/standard-license/
+Copyright GreenSock / Webflow. Original library license notices are retained in the bundled source.
+
+Cormorant Garamond: SIL Open Font License 1.1
+Full license: /licenses/cormorant-garamond.txt
+
+Website artwork: generated for this personal portfolio.
+KnowFlow AI images: project screenshots provided from the owner's local project.
