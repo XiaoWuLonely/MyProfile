@@ -1,0 +1,107 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import myblog from '../assets/myblog-cover.png';
+import knowflow from '../assets/knowflow-dashboard.png';
+import heyue from '../assets/heyue-tong-cover.png';
+import zhifu from '../assets/zhifu-ehang-cover.png';
+import mcdonalds from '../assets/mcdonalds-cover.png';
+const covers = { myblog, knowflow, heyue, zhifu, mcdonalds };
+const projects = await Promise.all(
+  (await getCollection('projects'))
+    .sort((a, b) => a.data.order - b.data.order)
+    .map(async (project) => ({ ...project, ...(await render(project)) })),
+);
+---
+
+<section
+  id="works"
+  class="chapter works"
+  aria-labelledby="works-title"
+  data-chapter="作品"
+>
+  <div class="section-heading" data-reveal>
+    <div>
+      <p class="eyebrow">01 / SELECTED WORKS</p>
+      <h2 id="works-title">
+        一些想法，
+        <br />
+        有了自己的形状。
+      </h2>
+    </div>
+    <p class="section-aside">
+      从个人记录到团队协作，
+      <br />
+      每一个作品，都是一次生长。<span>Five pieces. Five stories.</span>
+    </p>
+  </div>
+  <div class="projects-grid">
+    {projects.map(({ id, data, Content }) => (
+      <details
+        class="project-card"
+        id={`project-${id}`}
+        data-project
+        data-reveal
+      >
+        <summary>
+          <span class="project-image-wrap">
+            <Image
+              src={covers[data.cover as keyof typeof covers]}
+              alt={`${data.title} · ${data.coverNote}`}
+              widths={[360, 640, 900]}
+              sizes="(max-width: 640px) 90vw, (max-width: 1000px) 45vw, 30vw"
+              format="webp"
+              quality={82}
+              class="project-image"
+            />
+            <span class="cover-note">{data.coverNote}</span>
+            <span class="project-number">0{data.order}</span>
+          </span>
+          <span class="project-meta">
+            <span class="eyebrow">{data.category}</span>
+            <span class="open-mark" aria-hidden="true">
+              ↗
+            </span>
+          </span>
+          <h3>{data.title}</h3>
+          <p class="project-subtitle">{data.subtitle}</p>
+          <span class="sr-only">展开作品详情</span>
+        </summary>
+        <article class="project-story">
+          <p class="eyebrow">{data.period}</p>
+          <h2>{data.title}</h2>
+          <ul class="stack-list" aria-label="项目技术栈">
+            {data.stack.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+          <div class="prose">
+            <Content />
+          </div>
+          <div class="project-links">
+            {data.url && (
+              <a
+                class="text-link"
+                href={data.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                访问作品 ↗
+              </a>
+            )}
+            {data.github && (
+              <a
+                class="text-link"
+                href={data.github}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub ↗
+              </a>
+            )}
+          </div>
+        </article>
+      </details>
+    ))}
+  </div>
+</section>

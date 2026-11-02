@@ -1,0 +1,32 @@
+---
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<svg
+  class:list={['botanical', className]}
+  viewBox="0 0 220 320"
+  fill="none"
+  aria-hidden="true"
+>
+  <g
+    class="grass-stem"
+    stroke="currentColor"
+    stroke-width="1.4"
+    stroke-linecap="round"
+  >
+    <path d="M104 308C123 239 87 151 115 18M104 308C92 243 55 189 34 130M106 280C155 230 170 175 183 92" />
+    <path
+      d="M110 187C80 177 62 155 70 136C95 142 109 160 110 187ZM110 143C144 131 153 108 147 88C122 99 112 116 110 143ZM110 92C89 82 84 62 91 47C109 59 114 74 110 92ZM92 246C62 244 38 222 41 205C68 207 84 225 92 246ZM151 218C178 218 199 201 198 183C172 184 159 199 151 218Z"
+      fill="currentColor"
+      fill-opacity=".22"
+    />
+    <path d="M34 130L29 107M34 130L15 116M183 92L180 66M183 92L202 73M115 18L107 5M115 18L126 3" />
+    <circle cx="29" cy="105" r="4" fill="currentColor" />
+    <circle cx="14" cy="114" r="4" fill="currentColor" />
+    <circle cx="180" cy="64" r="4" fill="currentColor" />
+    <circle cx="204" cy="71" r="4" fill="currentColor" />
+  </g>
+</svg>
