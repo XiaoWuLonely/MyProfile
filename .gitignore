@@ -1,2 +1,24 @@
 AGENTS.md
 /docs/
+
+# Local dependencies and build output
+node_modules/
+dist/
+.astro/
+.pnpm-store/
+.env
+.env.*
+!.env.example
+
+# Local verification and documentation (requested)
+/tests/
+**/*.spec.*
+**/*.test.*
+/playwright.config.ts
+/test-results/
+/playwright-report/
+/coverage/
+/README*
+/CHANGELOG*
+*.log
+.DS_Store
