@@ -476,17 +476,27 @@
   width: 47%;
   height: 350px;
   perspective: 1000px;
+  transform-style: flat;
   rotate: -5deg;
+}
+.envelope-back {
+  position: absolute;
+  inset: 38% 0 0;
+  z-index: 0;
+  background: #cfb48c;
+  box-shadow: 2px 8px 18px #493b1820;
 }
 .letter-paper {
   position: absolute;
-  inset: 0 8% 15%;
+  inset: 0 8% auto;
+  height: 62%;
+  z-index: 2;
   background: var(--paper-light);
   padding: 25px 35px;
   box-shadow: 0 3px 8px #493b1820;
 }
 .letter-paper p {
-  font: italic 65px/1.2 var(--serif);
+  font: italic clamp(32px, 4.5vw, 65px)/1.2 var(--serif);
   color: var(--rust);
 }
 .letter-paper svg {
@@ -499,21 +509,26 @@
 }
 .envelope-pocket {
   position: absolute;
-  inset: 28% 0 0;
+  inset: 38% 0 0;
+  z-index: 3;
   background: #ddc59d;
-  clip-path: polygon(0 0, 50% 42%, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(0 0, 50% 38%, 100% 0, 100% 100%, 0 100%);
 }
 .envelope-wing {
   position: absolute;
-  inset: 28% 0 0;
+  inset: 38% 0 0;
+  z-index: 1;
   background: #e8d6b6;
-  clip-path: polygon(0 0, 100% 0, 50% 70%);
+  clip-path: polygon(0 0, 100% 0, 50% 60%);
   transform-origin: 50% 0;
+  /* Reading mode keeps the finished, open envelope without JavaScript. */
+  transform: rotateX(-180deg);
 }
 .wax-seal {
   position: absolute;
-  left: 44%;
-  bottom: 15%;
+  left: 50%;
+  top: 75%;
+  z-index: 5;
   width: 54px;
   height: 54px;
   border-radius: 50%;
@@ -522,6 +537,8 @@
   font: italic 40px/54px var(--serif);
   text-align: center;
   box-shadow: 2px 4px 8px #66361b33;
+  transform: translate(-50%, -50%);
+  opacity: 0;
 }
 .contact-panel .contact-email {
   font-size: clamp(23px, 2.6vw, 40px);
@@ -897,10 +914,10 @@ html:not(.has-js) .copy-email {
     margin-inline: auto;
   }
   .letter-paper {
-    padding: 15px 25px;
+    padding: 15px 20px;
   }
   .letter-paper p {
-    font-size: 46px;
+    font-size: clamp(28px, 11vw, 46px);
   }
   .wax-seal {
     width: 35px;
