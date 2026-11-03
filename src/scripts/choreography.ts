@@ -49,19 +49,20 @@ export function stageProps(
         scene.leave + exit * 0.4,
       );
   }
-  panel.querySelectorAll<SVGPathElement>('[data-draw]').forEach((path) => {
-    const length = path.getTotalLength();
-    timeline.fromTo(
-      path,
-      { strokeDasharray: length, strokeDashoffset: length },
-      {
-        strokeDashoffset: 0,
-        duration: Math.max(0.5, entry * 0.7),
-        ease: 'none',
-      },
-      scene.start + entry * 0.25,
-    );
-  });
+  if (scene.id !== 'journey')
+    panel.querySelectorAll<SVGPathElement>('[data-draw]').forEach((path) => {
+      const length = path.getTotalLength();
+      timeline.fromTo(
+        path,
+        { strokeDasharray: length, strokeDashoffset: length },
+        {
+          strokeDashoffset: 0,
+          duration: Math.max(0.5, entry * 0.7),
+          ease: 'none',
+        },
+        scene.start + entry * 0.25,
+      );
+    });
   const bookmark = panel.querySelector('[data-bookmark]');
   const layers = panel.querySelectorAll('[data-layer]');
   if (layers.length) {

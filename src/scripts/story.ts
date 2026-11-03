@@ -87,7 +87,7 @@ export function initializeStory() {
       gsap.set(panels, { autoAlpha: 0 });
       storyScenes.forEach((scene) => {
         const panel = document.getElementById(scene.id)!;
-        const entry = scene.read - scene.start;
+        const entry = scene.id === 'journey' ? 2 : scene.read - scene.start;
         const exit = scene.end - scene.leave;
         stageProps(timeline, panel, scene);
         const animateFrom = (
