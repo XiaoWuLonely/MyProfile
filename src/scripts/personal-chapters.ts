@@ -1,6 +1,23 @@
 import type { gsap as animationEngine } from 'gsap';
 type Timeline = ReturnType<typeof animationEngine.timeline>;
 export function personalChapters(timeline: Timeline) {
+  timeline.fromTo(
+    '.envelope-wing',
+    { rotationX: 0 },
+    { rotationX: -170, duration: 1.5, ease: 'power2.inOut' },
+    93.3,
+  );
+  timeline.fromTo(
+    '.letter-paper',
+    { y: 85 },
+    { y: -20, duration: 1.7, ease: 'power2.out' },
+    94,
+  );
+  timeline.to(
+    '.wax-seal',
+    { scale: 0.6, opacity: 0, duration: 0.5, ease: 'power1.in' },
+    93.1,
+  );
   const skills = document.querySelectorAll('[data-skill]');
   timeline.fromTo(
     skills,
