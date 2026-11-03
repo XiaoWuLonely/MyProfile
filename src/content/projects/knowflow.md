@@ -5,7 +5,7 @@ category: AI 应用 / 知识库问答
 period: 2026.05 — 2026.07
 order: 2
 cover: knowflow
-coverNote: 项目真实界面
+coverNote: 概念预览
 stack: [React, TypeScript, SSE, Spring Boot]
 ---
 
@@ -19,4 +19,4 @@ AI RAG 知识库问答平台，将知识库管理、文档处理与问答交互�
 
 ### 技术留下的痕迹
 
-Vite 组织开发与构建，Spring Boot 提供后端服务。作品封面采用真实项目截图，源代码目前未公开。
+Vite 组织开发与构建，Spring Boot 提供后端服务。作品封面采用生成的纸张概念预览，源代码目前未公开。
