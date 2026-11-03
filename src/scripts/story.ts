@@ -3,6 +3,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { storyScenes, storyAnchors, cameraPosition } from './story-data';
 import { stageProps, connectStages } from './choreography';
+import { personalChapters } from './personal-chapters';
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 export const worldState = { progress: 0, travel: 0 };
 
@@ -203,6 +204,7 @@ export function initializeStory() {
         }
       });
       connectStages(timeline);
+      personalChapters(timeline);
       timeline.to(
         worldState,
         { progress: 100, duration: 100, ease: 'none' },
