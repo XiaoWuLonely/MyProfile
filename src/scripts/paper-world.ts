@@ -19,15 +19,12 @@ export function mountWorld(container: HTMLElement, state: WorldState) {
     alpha: true,
     antialias: true,
   });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  // The softly lit background uses a lower render scale; HTML stays sharp.
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 0.8));
   renderer.setClearColor('#f5eddf', 1);
   const scene = new THREE.Scene();
   scene.fog = new THREE.Fog('#f5eddf', 16, 65);
   const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 180);
-  scene.add(new THREE.HemisphereLight('#fff8e8', '#c7bda4', 1.8));
-  const sunlight = new THREE.DirectionalLight('#fff6df', 1.1);
-  sunlight.position.set(-12, 22, 10);
-  scene.add(sunlight);
   const geometries: THREE.BufferGeometry[] = [];
   const materials: THREE.Material[] = [];
   const pixels = new Uint8Array(64 * 64 * 4);
@@ -42,9 +39,8 @@ export function mountWorld(container: HTMLElement, state: WorldState) {
   grain.magFilter = THREE.LinearFilter;
   grain.needsUpdate = true;
   const paper = (color: string) => {
-    const mat = new THREE.MeshStandardMaterial({
+    const mat = new THREE.MeshBasicMaterial({
       color,
-      roughness: 1,
       map: grain,
       side: THREE.DoubleSide,
     });
