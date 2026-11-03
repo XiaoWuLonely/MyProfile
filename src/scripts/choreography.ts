@@ -63,6 +63,27 @@ export function stageProps(
     );
   });
   const bookmark = panel.querySelector('[data-bookmark]');
+  const layers = panel.querySelectorAll('[data-layer]');
+  if (layers.length) {
+    timeline.fromTo(
+      layers,
+      { y: -65, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: entry * 0.5,
+        stagger: entry * 0.1,
+        ease: 'back.out(1.2)',
+      },
+      scene.start + entry * 0.2,
+    );
+    if (exit > 0)
+      timeline.to(
+        layers,
+        { y: 30, scaleY: 0.1, opacity: 0, duration: exit * 0.5 },
+        scene.leave + exit * 0.5,
+      );
+  }
   const plane = panel.querySelector('[data-plane]');
   if (plane) {
     timeline.fromTo(

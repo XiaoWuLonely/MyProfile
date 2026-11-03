@@ -6,6 +6,7 @@ import Book from './props/Book.astro';
 import Knowledge from './props/Knowledge.astro';
 import Farm from './props/Farm.astro';
 import Airport from './props/Airport.astro';
+import Menu from './props/Menu.astro';
 import myblog from '../assets/myblog-cover.png';
 import knowflow from '../assets/knowflow-concept.png';
 import heyue from '../assets/heyue-tong-cover.png';
@@ -56,6 +57,7 @@ const projects = (await getCollection('projects')).sort(
         {id === 'knowflow' && <Knowledge />}
         {id === 'heyue' && <Farm />}
         {id === 'zhifu' && <Airport />}
+        {id === 'mcdonalds' && <Menu />}
       </div>
     </div>
     <div class="scene-copy">
