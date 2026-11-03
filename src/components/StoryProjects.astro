@@ -1,0 +1,100 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import { projectRoles } from '../scripts/story-data';
+import Book from './props/Book.astro';
+import Knowledge from './props/Knowledge.astro';
+import Farm from './props/Farm.astro';
+import Airport from './props/Airport.astro';
+import Menu from './props/Menu.astro';
+import myblog from '../assets/myblog-cover.png';
+import knowflow from '../assets/knowflow-concept.png';
+import heyue from '../assets/heyue-tong-cover.png';
+import zhifu from '../assets/zhifu-ehang-cover.png';
+import mcdonalds from '../assets/mcdonalds-cover.png';
+const covers = { myblog, knowflow, heyue, zhifu, mcdonalds };
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<span id="works" aria-hidden="true"></span>
+
+{projects.map(({ id, data }) => (
+  <section
+    class:list={[
+      'story-panel',
+      'project-panel',
+      { 'image-right': data.order % 2 === 0 },
+    ]}
+    id={`project-${id}`}
+    data-story-panel
+    data-project={id}
+    aria-labelledby={`title-${id}`}
+  >
+    <div class="preview-collage">
+      <div class="paper-piece piece-a" data-piece></div>
+      <div class="paper-piece piece-b" data-piece></div>
+      <div class="paper-piece piece-c" data-piece></div>
+      <div class="paper-piece piece-d" data-piece></div>
+      <figure class="preview-board" data-board>
+        <Image
+          src={covers[data.cover as keyof typeof covers]}
+          alt={`${data.title} · 纸张概念预览`}
+          widths={[640, 1024, 1440]}
+          sizes="(max-width:767px) 88vw, 56vw"
+          format="webp"
+          quality={85}
+          loading={data.order === 1 ? 'eager' : 'lazy'}
+        />
+        <figcaption>
+          <span>0{data.order} / 05</span>
+          <span>{data.coverNote}</span>
+        </figcaption>
+      </figure>
+      <div class="project-props" data-props data-theme={id}>
+        {id === 'myblog' && <Book />}
+        {id === 'knowflow' && <Knowledge />}
+        {id === 'heyue' && <Farm />}
+        {id === 'zhifu' && <Airport />}
+        {id === 'mcdonalds' && <Menu />}
+      </div>
+    </div>
+    <div class="scene-copy">
+      <p class="eyebrow">
+        PIECE 0{data.order} / {data.category}
+      </p>
+      <h2 id={`title-${id}`}>{data.title}</h2>
+      <p class="project-poem">{data.subtitle}</p>
+      <span class="drawn-rule" data-line></span>
+      <p class="project-role">{projectRoles[id]}</p>
+      <ul class="stack-list">
+        {data.stack.slice(0, 3).map((tag) => (
+          <li>{tag}</li>
+        ))}
+      </ul>
+      <div class="scene-links">
+        {data.url && (
+          <a
+            class="text-link"
+            href={data.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            访问作品 ↗
+          </a>
+        )}
+        {data.github && (
+          <a
+            class="text-link"
+            href={data.github}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub ↗
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+))}

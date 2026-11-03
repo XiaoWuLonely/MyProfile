@@ -3,44 +3,35 @@ import { Image } from 'astro:assets';
 import '@fontsource/cormorant-garamond/500.css';
 import '@fontsource/cormorant-garamond/500-italic.css';
 import '../styles/global.css';
-import '../styles/interactions.css';
-import ProjectGallery from '../components/ProjectGallery.astro';
-import Botanical from '../components/Botanical.astro';
-import ProjectDialog from '../components/ProjectDialog.astro';
-import hero from '../assets/home-hero.png';
-import about from '../assets/about-art.png';
-import contact from '../assets/contact-art.png';
+import '../styles/story.css';
+import StoryProjects from '../components/StoryProjects.astro';
+import plant from '../assets/botanical-cutout.png';
 const chapters = [
   ['works', '作品'],
   ['about', '关于'],
   ['journey', '经历'],
   ['contact', '联系'],
 ];
-const journey = [
-  {
-    year: '2023',
-    title: '从好奇开始',
-    body: '广东理工职业学院 · 电子商务',
-    period: '2023 — 2025',
-  },
-  {
-    year: '2024',
-    title: '把学习，留在纸上',
-    body: '开始记录学习过程，把技术笔记、资源链接和项目想法逐步沉淀下来。',
-    period: '学习与记录',
-  },
-  {
-    year: '2025',
-    title: '走进计算机的世界',
-    body: '广东白云学院 · 计算机科学与技术',
-    period: '本科 · 2025 — 2027',
-  },
-  {
-    year: '2026',
-    title: '让想法慢慢落地',
-    body: '个人博客、AI 知识库、团队项目。在真实的构建中学习，也在协作中成长。',
-    period: '继续探索中',
-  },
+const years = [
+  ['2023', '从好奇开始', '广东理工职业学院 · 电子商务', '2023—2025'],
+  [
+    '2024',
+    '把学习，留在纸上',
+    '记录技术笔记、资源链接与项目想法。',
+    '学习与记录',
+  ],
+  [
+    '2025',
+    '走进计算机的世界',
+    '广东白云学院 · 计算机科学与技术',
+    '本科 · 2025—2027',
+  ],
+  [
+    '2026',
+    '让想法慢慢落地',
+    '个人博客、AI 知识库与团队项目实践。',
+    '继续探索中',
+  ],
 ];
 ---
 
@@ -48,30 +39,27 @@ const journey = [
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="邓林峰 WuLong 的个人作品集。学生开发者，在逻辑与想象之间记录、构建、持续生长。"
+      content="邓林峰 WuLong 的个人作品集。沿一条纸路，翻阅作品、学习与持续生长的故事。"
     />
     <meta name="theme-color" content="#f5eddf" />
     <meta property="og:title" content="邓林峰 WuLong · Paper & Pixels" />
-    <meta
-      property="og:description"
-      content="一本会呼吸的个人作品集。在纸张、代码与好奇心之间，持续生长。"
-    />
+    <meta property="og:description" content="一段会呼吸的纸造旅程。" />
     <meta property="og:type" content="website" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.svg" />
     <title>邓林峰 WuLong · Paper &amp; Pixels</title>
   </head>
   <body>
-    <a class="skip-link" href="#main">
-      跳到内容
+    <a class="skip-link" href="?reading=1#main">
+      跳过动画，阅读内容
     </a>
     <header class="site-header">
       <a class="wordmark" href="#home" aria-label="Paper and Pixels，返回首页">
         <span class="brand-seed" aria-hidden="true">
           ✳
-        </span>{' '}
+        </span>
         Paper <i>&amp;</i> Pixels<span class="wordmark-dot">.</span>
       </a>
       <button
@@ -79,291 +67,285 @@ const journey = [
         aria-expanded="false"
         aria-controls="site-nav"
       >
-        目录 <span aria-hidden="true">＋</span>
+        目录 ＋
       </button>
       <nav id="site-nav" class="site-nav" aria-label="章节导航">
-        {chapters.map(([id, title], index) => (
+        {chapters.map(([id, label], i) => (
           <a href={`#${id}`}>
-            <span>0{index + 1}</span>
-            {title}
+            <span>0{i + 1}</span>
+            {label}
           </a>
         ))}
       </nav>
       <a class="resume-link" href="/resume-deng-linfeng.pdf" download>
-        简历 <span aria-hidden="true">↓</span>
+        简历 ↓
       </a>
     </header>
-    <main id="main">
-      <section
-        class="hero chapter"
-        id="home"
-        aria-labelledby="hero-title"
-        data-chapter="开场"
-      >
-        <div class="hero-art" aria-hidden="true">
-          <Image
-            src={hero}
-            alt=""
-            widths={[780, 1440, 1920]}
-            sizes="100vw"
-            format="webp"
-            quality={85}
-            loading="eager"
-            fetchpriority="high"
-          />
-        </div>
-        <div id="paper-scene" class="paper-scene" aria-hidden="true"></div>
-        <div class="hero-copy">
-          <p class="eyebrow hero-eyebrow">
-            <span class="status-dot"></span> A GROWING PORTFOLIO / 2026
-          </p>
-          <p class="hero-intro">你好，我是邓林峰。</p>
-          <h1 id="hero-title">
-            在逻辑与
-            <br />
-            <span class="hero-line">
-              想象
-              <span class="hand-circle">
-                之间
-                <svg viewBox="0 0 220 100" aria-hidden="true">
-                  <path d="M202 23C155-5 41 1 15 40S46 104 132 91S234 36 191 15" />
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        <main id="main">
+          <div id="story-stage" aria-label="沿纸路展开的个人作品集">
+            <div class="world-backdrop" aria-hidden="true">
+              <div class="paper-terrain">
+                <div class="paper-hill hill-far"></div>
+                <div class="paper-hill hill-middle"></div>
+                <div class="paper-hill hill-near"></div>
+                <svg
+                  class="paper-road"
+                  viewBox="0 0 1440 600"
+                  preserveAspectRatio="none"
+                >
+                  <path
+                    class="road-shadow"
+                    d="M800 620C440 460 1060 310 720 220S500 50 780-40"
+                  />
+                  <path d="M800 620C440 460 1060 310 720 220S500 50 780-40" />
+                  <path
+                    class="road-ink"
+                    d="M800 620C440 460 1060 310 720 220S500 50 780-40"
+                  />
                 </svg>
-              </span>
-              。
-            </span>
-            <em>WuLong.</em>
-          </h1>
-          <p class="hero-description">
-            学生开发者，也是一个始终保持好奇的人。
-            <br />
-            把技术学深一点，把想法做得有趣一点。
-          </p>
-          <a class="paper-button" href="#works">
-            翻开我的作品 <span aria-hidden="true">↘</span>
-          </a>
-        </div>
-        <div class="hero-side-note" aria-hidden="true">
-          A little logic.
-          <br />
-          <i>A little wonder.</i>
-        </div>
-        <div class="hero-bottom">
-          <span>代码 · 纸张 · 好奇心</span>
-          <a href="#works">
-            <span class="scroll-thread" aria-hidden="true"></span>向下，慢慢翻阅
-          </a>
-          <span class="hero-edition">VOL. 01 — ALWAYS GROWING</span>
-        </div>
-        <div class="torn-edge" aria-hidden="true"></div>
-      </section>
-      <ProjectGallery />
-      <section
-        id="about"
-        class="chapter about"
-        aria-labelledby="about-title"
-        data-chapter="关于"
-      >
-        <div class="about-visual" data-reveal>
-          <div class="about-art-paper">
-            <Image
-              src={about}
-              alt="书本、植物与手工纸组成的暖色拼贴"
-              widths={[500, 900]}
-              sizes="(max-width: 760px) 90vw, 45vw"
-              format="webp"
-              quality={80}
-            />
-          </div>
-          <span class="tape" aria-hidden="true"></span>
-          <p class="handwritten">
-            Still learning,
-            <br />
-            still growing.
-          </p>
-          <Botanical class="about-botanical" />
-          <div class="little-label">好奇心，永远在线。</div>
-        </div>
-        <div class="about-copy" data-reveal>
-          <p class="eyebrow">02 / A LITTLE ABOUT ME</p>
-          <h2 id="about-title">
-            保持好奇，
-            <br />
-            也保持<span class="accent-italic">笨拙的认真。</span>
-          </h2>
-          <p>
-            21 岁，计算机科学与技术在读。
-            <br />
-            从电子商务走进代码的世界，
-            <br />
-            我喜欢让抽象的想法，变成可以被使用的东西。
-          </p>
-          <p>
-            正在向资深计算机开发工程师成长。
-            <br />
-            既打磨传统技术的基础，也探索新技术的可能。
-          </p>
-          <div class="toolbox">
-            <p class="eyebrow">THINGS I BUILD WITH</p>
-            <ul class="stack-list">
-              <li>Vue &amp; React</li>
-              <li>TypeScript</li>
-              <li>Node.js</li>
-              <li>AI 应用</li>
-              <li>一点点想象力</li>
-            </ul>
-          </div>
-          <a
-            class="text-link"
-            href="https://github.com/XiaoWuLonely"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            去 GitHub 看看我的日常 ↗
-          </a>
-        </div>
-      </section>
-      <section
-        id="journey"
-        class="chapter journey"
-        aria-labelledby="journey-title"
-        data-chapter="经历"
-      >
-        <div class="section-heading" data-reveal>
-          <div>
-            <p class="eyebrow">03 / NOTES ALONG THE WAY</p>
-            <h2 id="journey-title">
-              没有捷径，
-              <br />
-              但沿途<span class="accent-italic">有风景。</span>
-            </h2>
-          </div>
-          <p class="section-aside">
-            一些选择，一些尝试。
-            <br />
-            把走过的路，慢慢连成自己。
-            <span>A work, and a self, in progress.</span>
-          </p>
-        </div>
-        <div class="journey-track">
-          <svg
-            class="journey-path"
-            viewBox="0 0 1000 120"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <path
-              class="path-guide"
-              d="M0 74C150 10 220 120 350 65S560 10 650 66S850 115 1000 40"
-            />
-            <path
-              class="path-drawn"
-              d="M0 74C150 10 220 120 350 65S560 10 650 66S850 115 1000 40"
-            />
-          </svg>
-          <ol class="journey-list">
-            {journey.map((item) => (
-              <li class="journey-stop" data-reveal>
-                <span class="journey-year">{item.year}</span>
-                <span class="journey-pin" aria-hidden="true"></span>
-                <div class="journey-note">
-                  <p class="eyebrow">{item.period}</p>
-                  <h3>{item.title}</h3>
-                  <p>{item.body}</p>
+              </div>
+              <div id="world-canvas"></div>
+            </div>
+            <div class="field-plants" aria-hidden="true">
+              {[0, 1, 2, 3].map((i) => (
+                <div class={`field-plant plant-${i}`}>
+                  <Image
+                    src={plant}
+                    alt=""
+                    widths={[320, 640]}
+                    sizes="(max-width:767px) 35vw, 24vw"
+                    format="webp"
+                    loading="eager"
+                  />
                 </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-        <p class="journey-end">
-          下一站，还在书写。<span aria-hidden="true">↗</span>
-        </p>
-      </section>
-      <section
-        id="contact"
-        class="chapter contact"
-        aria-labelledby="contact-title"
-        data-chapter="联系"
-      >
-        <div class="contact-art" aria-hidden="true">
-          <Image
-            src={contact}
-            alt=""
-            widths={[600, 1000]}
-            sizes="(max-width: 760px) 90vw, 45vw"
-            format="webp"
-            quality={80}
-          />
-          <div class="envelope-flap"></div>
-        </div>
-        <div class="contact-copy" data-reveal>
-          <p class="eyebrow">04 / LEAVE A LITTLE NOTE</p>
-          <h2 id="contact-title">
-            下一段故事，
-            <br />
-            从一句<span class="accent-italic">你好</span>开始。
-          </h2>
-          <p>
-            关于一个想法、一份机会，或只是打个招呼。
-            <br />
-            我的信箱，一直为新的连接留着位置。
-          </p>
-          <a class="contact-email" href="mailto:oolongheist@gmail.com">
-            oolongheist@gmail.com <span aria-hidden="true">↗</span>
-          </a>
-          <div class="contact-actions">
-            <button class="text-link copy-email" type="button">
-              复制邮箱 <span aria-hidden="true">⧉</span>
-            </button>
-            <a
-              class="text-link"
-              href="https://github.com/XiaoWuLonely"
-              target="_blank"
-              rel="noopener noreferrer"
+              ))}
+            </div>
+            <section
+              class="story-panel opening-panel"
+              id="home"
+              data-story-panel
+              aria-labelledby="hero-title"
             >
-              GitHub ↗
-            </a>
-            <a class="text-link" href="/resume-deng-linfeng.pdf" download>
-              下载简历 ↓
-            </a>
+              <div class="opening-collage" aria-hidden="true">
+                <div class="opening-sun" data-piece></div>
+                <div class="opening-olive" data-piece></div>
+                <div class="opening-sheet" data-board>
+                  <svg class="opening-mark" viewBox="0 0 300 300">
+                    <path d="M30 70L85 240L150 90L205 240L265 70M12 70H62M124 70H178M238 70H286" />
+                  </svg>
+                </div>
+                <div class="opening-strip" data-piece></div>
+              </div>
+              <div class="scene-copy">
+                <p class="eyebrow">
+                  <span class="status-dot"></span> A GROWING PORTFOLIO / 2026
+                </p>
+                <p class="hero-intro">你好，我是邓林峰。</p>
+                <h1 id="hero-title">
+                  在逻辑与
+                  <br />
+                  想象之间。<em>WuLong.</em>
+                </h1>
+                <p class="project-poem">
+                  学生开发者，也是一个始终保持好奇的人。
+                </p>
+                <p class="opening-note">把技术学深一点，把想法做得有趣一点。</p>
+                <a class="text-link" href="#works">
+                  沿着纸路，翻开作品 ↘
+                </a>
+              </div>
+              <span class="scene-marginal" aria-hidden="true">
+                A little logic.
+                <br />
+                <i>A little wonder.</i>
+              </span>
+            </section>
+            <StoryProjects />
+            <div class="story-bridge" aria-hidden="true">
+              <svg viewBox="0 0 300 90">
+                <path d="M10 62Q65 8 145 42T290 25" />
+              </svg>
+            </div>
+            <section
+              class="story-panel about-panel"
+              id="about"
+              data-story-panel
+              aria-labelledby="about-title"
+            >
+              <div class="note-board" data-board>
+                <span class="note-tape"></span>
+                <p class="eyebrow">A NOTE TO MYSELF</p>
+                <p class="handwritten-note">
+                  Stay curious.
+                  <br />
+                  Keep growing.
+                </p>
+                <div class="skill-papers">
+                  <span data-skill>Vue / React</span>
+                  <span data-skill>TypeScript</span>
+                  <span data-skill>Node.js</span>
+                  <span data-skill>AI 应用</span>
+                </div>
+                <svg viewBox="0 0 400 80" class="note-line" aria-hidden="true">
+                  <path data-draw d="M5 65Q90 5 180 40T390 20" />
+                </svg>
+              </div>
+              <div class="chapter-copy">
+                <p class="eyebrow">06 / A LITTLE ABOUT ME</p>
+                <h2 id="about-title">
+                  保持好奇，
+                  <br />
+                  也保持<span>笨拙的认真。</span>
+                </h2>
+                <p>
+                  21 岁，计算机科学与技术在读。
+                  <br />
+                  从电子商务走进代码的世界，
+                  <br />
+                  喜欢让抽象的想法变成可以使用的东西。
+                </p>
+                <p>
+                  向资深计算机开发工程师成长。
+                  <br />
+                  既打磨基础，也探索新技术的可能。
+                </p>
+                <a
+                  class="text-link"
+                  href="https://github.com/XiaoWuLonely"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  去 GitHub 看看我的日常 ↗
+                </a>
+              </div>
+            </section>
+            <section
+              class="story-panel journey-panel"
+              id="journey"
+              data-story-panel
+              aria-labelledby="journey-title"
+            >
+              <div class="chapter-copy">
+                <p class="eyebrow">07 / NOTES ALONG THE WAY</p>
+                <h2 id="journey-title">
+                  没有捷径，
+                  <br />
+                  但沿途<span>有风景。</span>
+                </h2>
+              </div>
+              <div class="journey-ribbon">
+                <svg
+                  viewBox="0 0 1200 240"
+                  preserveAspectRatio="none"
+                  class="growth-thread"
+                  aria-hidden="true"
+                >
+                  <path
+                    class="growth-guide"
+                    d="M0 150C150 30 230 210 360 110S580 30 650 115S900 220 1200 70"
+                  />
+                  <path
+                    data-draw
+                    d="M0 150C150 30 230 210 360 110S580 30 650 115S900 220 1200 70"
+                  />
+                </svg>
+                <ol>
+                  {years.map(([year, title, body, period]) => (
+                    <li class="year-note" data-year>
+                      <span class="year">{year}</span>
+                      <div class="year-paper">
+                        <p class="eyebrow">{period}</p>
+                        <h3>{title}</h3>
+                        <p>{body}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+              <p class="journey-whisper">下一站，还在书写。 ↗</p>
+            </section>
+            <section
+              class="story-panel contact-panel"
+              id="contact"
+              data-story-panel
+              aria-labelledby="contact-title"
+            >
+              <div class="envelope-art" data-board aria-hidden="true">
+                <div class="letter-paper">
+                  <p>Say hello.</p>
+                  <svg viewBox="0 0 300 40">
+                    <path data-draw d="M5 20Q75 0 150 20T290 20" />
+                  </svg>
+                </div>
+                <div class="envelope-pocket"></div>
+                <div class="envelope-wing"></div>
+                <span class="wax-seal">W</span>
+              </div>
+              <div class="chapter-copy">
+                <p class="eyebrow">08 / LEAVE A LITTLE NOTE</p>
+                <h2 id="contact-title">
+                  下一段故事，
+                  <br />
+                  从一句<span>你好</span>开始。
+                </h2>
+                <p>
+                  关于一个想法、一份机会，或只是打个招呼。
+                  <br />
+                  我的信箱，一直为新的连接留着位置。
+                </p>
+                <a class="contact-email" href="mailto:oolongheist@gmail.com">
+                  oolongheist@gmail.com ↗
+                </a>
+                <div class="contact-actions">
+                  <button class="text-link copy-email" type="button">
+                    复制邮箱 ⧉
+                  </button>
+                  <a
+                    class="text-link"
+                    href="https://github.com/XiaoWuLonely"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    GitHub ↗
+                  </a>
+                  <a class="text-link" href="/resume-deng-linfeng.pdf" download>
+                    下载简历 ↓
+                  </a>
+                </div>
+                <p id="copy-status" role="status" aria-live="polite"></p>
+              </div>
+            </section>
           </div>
-          <p
-            id="copy-status"
-            class="copy-status"
-            role="status"
-            aria-live="polite"
-          ></p>
-        </div>
-      </section>
-    </main>
-    <footer class="site-footer">
-      <a class="wordmark" href="#home">
-        Paper <i>&amp;</i> Pixels.
-      </a>
-      <p>用代码构建，以好奇心生长。</p>
-      <span>© 2026 WULONG</span>
-      <a href="#home" class="back-top">
-        回到纸张的开头 ↑
-      </a>
-    </footer>
-    <div class="reading-indicator" aria-hidden="true">
-      <span class="reading-current">开场</span>
-      <span class="reading-line">
+        </main>
+        <footer class="story-footer">
+          用代码构建，以好奇心生长。<span>© 2026 WULONG</span>
+          <a href="#home">回到开头 ↑</a>
+        </footer>
+      </div>
+    </div>
+    <div class="reading-indicator">
+      <span class="reading-current">开场原野</span>
+      <span class="reading-line" aria-hidden="true">
         <span></span>
       </span>
-      <span>慢慢来，也很好。</span>
+      <span class="journey-hint">SCROLL TO WANDER ↓</span>
+      <a class="reading-mode" href="?reading=1">
+        无动画阅读
+      </a>
     </div>
-    <ProjectDialog />
     <script>
-      import { initializeUI } from '../scripts/ui';
-      import { initializeMotion } from '../scripts/motion';
-      import { initializeScene } from '../scripts/scene-loader';
-      const disposeUI = initializeUI();
-      const disposeMotion = initializeMotion();
-      const disposeScene = initializeScene();
+      import { initializeStory } from '../scripts/story';
+      import { initializeStoryUI } from '../scripts/story-ui';
+      import { initializeWorld } from '../scripts/world-loader';
+      const disposeUI = initializeStoryUI();
+      const disposeStory = initializeStory();
+      const disposeWorld = initializeWorld();
       if (import.meta.hot)
         import.meta.hot.dispose(() => {
-          disposeScene();
-          disposeMotion();
+          disposeWorld();
+          disposeStory();
           disposeUI();
         });
     </script>
