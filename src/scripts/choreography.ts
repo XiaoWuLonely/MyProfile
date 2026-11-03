@@ -63,6 +63,14 @@ export function stageProps(
     );
   });
   const bookmark = panel.querySelector('[data-bookmark]');
+  const cards = panel.querySelectorAll('[data-card]');
+  if (cards.length)
+    timeline.fromTo(
+      cards,
+      { x: (i) => (i % 2 ? 60 : -60) },
+      { x: 0, duration: entry * 0.7, ease: 'power2.out' },
+      scene.start + entry * 0.15,
+    );
   if (bookmark && exit > 0)
     timeline.to(
       bookmark,
