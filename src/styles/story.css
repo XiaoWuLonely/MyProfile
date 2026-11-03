@@ -1089,3 +1089,167 @@ html[data-world-paused] .field-plant {
     top: 48%;
   }
 }
+@media (max-height: 650px) and (max-width: 767px) {
+  .story-active #story-stage {
+    min-height: 0;
+  }
+  .story-active .story-panel {
+    padding-top: 90px;
+    padding-bottom: 50px;
+    gap: 15px;
+  }
+  .preview-collage {
+    width: 74%;
+  }
+  .scene-copy h2,
+  .chapter-copy h2 {
+    font-size: 25px;
+  }
+  .scene-copy > .eyebrow,
+  .chapter-copy > .eyebrow {
+    font-size: 8px;
+    margin-bottom: 8px;
+  }
+  .scene-copy .project-poem {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .project-role {
+    font-size: 11px;
+    margin-top: 8px;
+  }
+  .drawn-rule {
+    margin-top: 8px;
+  }
+  .project-props {
+    width: 100px;
+    height: 75px;
+  }
+  .note-board {
+    min-height: 160px;
+    padding: 16px;
+  }
+  .handwritten-note {
+    font-size: 32px;
+    margin-top: 12px;
+  }
+  .skill-papers {
+    margin-top: 10px;
+  }
+  .chapter-copy > p:not(.eyebrow) {
+    font-size: 11px;
+    margin-top: 10px;
+  }
+  .year-paper {
+    min-height: 90px;
+    padding: 8px;
+  }
+  .year-paper h3 {
+    font-size: 13px;
+  }
+  .year-note .year {
+    font-size: 30px;
+  }
+  .envelope-art {
+    height: 135px;
+  }
+  .letter-paper p {
+    font-size: 35px;
+  }
+  .opening-panel h1 {
+    font-size: 40px;
+  }
+  .opening-panel h1 em {
+    font-size: 66px;
+  }
+  .scene-marginal {
+    bottom: 10%;
+    font-size: 20px;
+  }
+}
+@media (max-height: 580px) and (min-width: 768px) {
+  .story-active #story-stage {
+    min-height: 0;
+  }
+  .site-header {
+    min-height: 58px;
+    padding-block: 10px;
+  }
+  .story-active .story-panel {
+    padding-top: 75px;
+    padding-bottom: 40px;
+  }
+  .scene-copy h2,
+  .chapter-copy h2 {
+    font-size: 30px;
+  }
+  .scene-copy .project-poem {
+    font-size: 16px;
+  }
+  .scene-copy > .eyebrow,
+  .chapter-copy > .eyebrow {
+    margin-bottom: 10px;
+  }
+  .project-role {
+    font-size: 11px;
+  }
+  .scene-copy .stack-list {
+    margin-block: 8px;
+  }
+  .preview-collage {
+    width: 48%;
+  }
+  .preview-board {
+    padding: 8px 8px 20px;
+  }
+  .project-props {
+    width: 140px;
+    height: 100px;
+    bottom: -35px;
+  }
+  .note-board {
+    min-height: 200px;
+    padding: 20px;
+  }
+  .handwritten-note {
+    font-size: 40px;
+    margin-top: 15px;
+  }
+  .note-line {
+    height: 25px;
+  }
+  .chapter-copy > p:not(.eyebrow) {
+    font-size: 11px;
+    margin-top: 10px;
+  }
+  .journey-panel {
+    gap: 12px;
+  }
+  .journey-panel h2 {
+    font-size: 27px;
+  }
+  .year-note .year {
+    font-size: 35px;
+  }
+  .year-paper {
+    min-height: 100px;
+    margin-top: 25px;
+    padding: 12px;
+  }
+  .year-paper h3 {
+    font-size: 16px;
+    margin-block: 8px;
+  }
+  .envelope-art {
+    height: 230px;
+  }
+  .contact-panel .contact-email {
+    font-size: 26px;
+  }
+  .opening-panel h1 {
+    font-size: 48px;
+  }
+  .opening-panel h1 em {
+    font-size: 80px;
+  }
+}
