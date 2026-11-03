@@ -2,6 +2,10 @@ export function initializeStoryUI() {
   const events = new AbortController();
   const { signal } = events;
   document.documentElement.classList.add('has-js');
+  const readingLink =
+    document.querySelector<HTMLAnchorElement>('.reading-mode');
+  if (readingLink && new URLSearchParams(location.search).has('reading'))
+    readingLink.href = location.pathname + location.hash;
   const menu = document.querySelector<HTMLButtonElement>('.menu-toggle');
   const nav = document.querySelector<HTMLElement>('.site-nav');
   const close = () => {

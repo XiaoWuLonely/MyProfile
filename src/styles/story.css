@@ -976,3 +976,7 @@ html:not(.has-js) .copy-email {
   stroke-width: 10;
   opacity: 0.32;
 }
+html.story-active {
+  scroll-behavior: auto;
+  scroll-padding-top: 0;
+}

@@ -13,6 +13,8 @@ const projects = (await getCollection('projects')).sort(
 );
 ---
 
+<span id="works" aria-hidden="true"></span>
+
 {projects.map(({ id, data }) => (
   <section
     class:list={[
