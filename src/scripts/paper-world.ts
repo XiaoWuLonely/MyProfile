@@ -24,8 +24,8 @@ export function mountWorld(container: HTMLElement, state: WorldState) {
   const scene = new THREE.Scene();
   scene.fog = new THREE.Fog('#f5eddf', 16, 65);
   const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 180);
-  scene.add(new THREE.HemisphereLight('#fff8e8', '#c7bda4', 2.5));
-  const sunlight = new THREE.DirectionalLight('#fff6df', 2.3);
+  scene.add(new THREE.HemisphereLight('#fff8e8', '#c7bda4', 1.8));
+  const sunlight = new THREE.DirectionalLight('#fff6df', 1.1);
   sunlight.position.set(-12, 22, 10);
   scene.add(sunlight);
   const geometries: THREE.BufferGeometry[] = [];
@@ -38,7 +38,8 @@ export function mountWorld(container: HTMLElement, state: WorldState) {
   }
   const grain = new THREE.DataTexture(pixels, 64, 64);
   grain.wrapS = grain.wrapT = THREE.RepeatWrapping;
-  grain.repeat.set(5, 5);
+  grain.repeat.set(40, 40);
+  grain.magFilter = THREE.LinearFilter;
   grain.needsUpdate = true;
   const paper = (color: string) => {
     const mat = new THREE.MeshStandardMaterial({
@@ -177,7 +178,7 @@ export function mountWorld(container: HTMLElement, state: WorldState) {
       center.z + Math.sin(i * 6.2) * 4,
     );
     dummy.rotation.set(0, 0.3 * Math.sin(i), 0.35 * Math.sin(i * 2.3));
-    dummy.scale.setScalar(0.55 + (i % 5) * 0.15);
+    dummy.scale.setScalar(0.3 + (i % 5) * 0.07);
     dummy.updateMatrix();
     leaves.setMatrixAt(i, dummy.matrix);
   }

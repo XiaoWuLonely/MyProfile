@@ -72,6 +72,16 @@ export function initializeStory() {
         effects: false,
       });
       const timeline = gsap.timeline({ paused: true });
+      let intro: gsap.core.Timeline | undefined;
+      const finishIntro = () => {
+        const active = intro;
+        intro = undefined;
+        if (active) {
+          active.progress(1);
+          active.kill();
+        }
+        stage.dataset.intro = 'done';
+      };
       gsap.set(panels, { autoAlpha: 0 });
       storyScenes.forEach((scene) => {
         const panel = document.getElementById(scene.id)!;
@@ -197,6 +207,7 @@ export function initializeStory() {
       );
       const render = () => {
         const p = timeline.time();
+        if (p > 0 && intro) finishIntro();
         worldState.progress = p;
         worldState.travel = cameraPosition(p);
         stage.dataset.progress = p.toFixed(3);
@@ -242,6 +253,8 @@ export function initializeStory() {
       });
       ScrollTrigger.refresh();
       frame = requestAnimationFrame(() => {
+        const playIntro =
+          first && (!location.hash || location.hash === '#home');
         if (first && location.hash) seek();
         else if (!first)
           smoother?.scrollTo(
@@ -250,9 +263,52 @@ export function initializeStory() {
           );
         first = false;
         render();
+        if (playIntro) {
+          stage.dataset.intro = 'playing';
+          intro = gsap.timeline({
+            onComplete: () => {
+              stage.dataset.intro = 'done';
+              intro = undefined;
+            },
+          });
+          intro
+            .fromTo(
+              '.opening-sheet',
+              { x: 120, y: -70, rotationY: 35, opacity: 0.3 },
+              {
+                x: 0,
+                y: 0,
+                rotationY: 0,
+                opacity: 1,
+                duration: 1.2,
+                ease: 'power3.out',
+              },
+              0,
+            )
+            .fromTo(
+              '.opening-collage [data-piece]',
+              {
+                x: (i) => (i % 2 ? 1 : -1) * 200,
+                y: -80,
+                rotationZ: (i) => (i % 2 ? 20 : -20),
+                opacity: 0,
+              },
+              {
+                x: 0,
+                y: 0,
+                rotationZ: 0,
+                opacity: 1,
+                duration: 1,
+                stagger: 0.08,
+                ease: 'power3.out',
+              },
+              0,
+            );
+        } else stage.dataset.intro = 'done';
       });
       return () => {
         preserved = trigger?.progress ?? 0;
+        finishIntro();
         cancelAnimationFrame(frame);
         trigger?.kill();
         trigger = undefined;

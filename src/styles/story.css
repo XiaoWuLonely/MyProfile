@@ -1017,3 +1017,15 @@ html[data-world-paused] .field-plant {
     right: -23%;
   }
 }
+.world-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    #f5eddf 0%,
+    #f5eddfed 22%,
+    #f5eddf80 52%,
+    transparent 85%
+  );
+}
