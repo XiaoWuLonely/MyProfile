@@ -2,6 +2,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { storyScenes, storyAnchors, cameraPosition } from './story-data';
+import { stageProps, connectStages } from './choreography';
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 export const worldState = { progress: 0, travel: 0 };
 
@@ -87,6 +88,7 @@ export function initializeStory() {
         const panel = document.getElementById(scene.id)!;
         const entry = scene.read - scene.start;
         const exit = scene.end - scene.leave;
+        stageProps(timeline, panel, scene);
         const animateFrom = (
           selector: string,
           from: gsap.TweenVars,
@@ -200,6 +202,7 @@ export function initializeStory() {
           );
         }
       });
+      connectStages(timeline);
       timeline.to(
         worldState,
         { progress: 100, duration: 100, ease: 'none' },

@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import { projectRoles } from '../scripts/story-data';
+import Book from './props/Book.astro';
 import myblog from '../assets/myblog-cover.png';
 import knowflow from '../assets/knowflow-concept.png';
 import heyue from '../assets/heyue-tong-cover.png';
@@ -47,7 +48,9 @@ const projects = (await getCollection('projects')).sort(
           <span>{data.coverNote}</span>
         </figcaption>
       </figure>
-      <div class="project-props" data-props data-theme={id}></div>
+      <div class="project-props" data-props data-theme={id}>
+        {id === 'myblog' && <Book />}
+      </div>
     </div>
     <div class="scene-copy">
       <p class="eyebrow">

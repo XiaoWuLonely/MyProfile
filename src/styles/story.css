@@ -1029,3 +1029,63 @@ html[data-world-paused] .field-plant {
     transparent 85%
   );
 }
+.project-props {
+  width: 240px;
+  height: 170px;
+  right: -22px;
+  bottom: -70px;
+}
+.story-bridge {
+  display: none;
+  position: absolute;
+  z-index: 7;
+  left: 37%;
+  top: 60%;
+  width: 28%;
+  height: 13%;
+  background: #f9efdb;
+  box-shadow: 2px 12px 20px #5a3d2420;
+  clip-path: polygon(
+    0 4%,
+    18% 0,
+    43% 5%,
+    70% 0,
+    100% 4%,
+    98% 98%,
+    74% 95%,
+    50% 100%,
+    20% 96%,
+    0 100%
+  );
+  pointer-events: none;
+}
+.story-bridge svg {
+  height: 100%;
+  width: 100%;
+}
+.story-bridge path {
+  fill: none;
+  stroke: #8b9274;
+  stroke-width: 1.5;
+}
+.story-active .story-bridge {
+  display: block;
+}
+.project-props [data-fold] {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+@media (max-width: 767px) {
+  .project-props {
+    width: 145px;
+    height: 100px;
+    right: -20px;
+    bottom: -40px;
+  }
+  .story-bridge {
+    left: 27%;
+    width: 46%;
+    height: 10%;
+    top: 48%;
+  }
+}
