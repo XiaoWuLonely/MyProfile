@@ -63,6 +63,28 @@ export function stageProps(
     );
   });
   const bookmark = panel.querySelector('[data-bookmark]');
+  const plane = panel.querySelector('[data-plane]');
+  if (plane) {
+    timeline.fromTo(
+      plane,
+      { x: -95, y: 35, rotation: -12, opacity: 0 },
+      {
+        x: 0,
+        y: 0,
+        rotation: 0,
+        opacity: 1,
+        duration: entry * 0.75,
+        ease: 'power2.out',
+      },
+      scene.start + entry * 0.2,
+    );
+    if (exit > 0)
+      timeline.to(
+        plane,
+        { x: 65, y: -25, opacity: 0, duration: exit * 0.7 },
+        scene.leave + exit * 0.3,
+      );
+  }
   const cards = panel.querySelectorAll('[data-card]');
   if (cards.length)
     timeline.fromTo(
