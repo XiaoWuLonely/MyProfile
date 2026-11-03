@@ -333,10 +333,13 @@ const years = [
     <script>
       import { initializeStory } from '../scripts/story';
       import { initializeStoryUI } from '../scripts/story-ui';
+      import { initializeWorld } from '../scripts/world-loader';
       const disposeUI = initializeStoryUI();
       const disposeStory = initializeStory();
+      const disposeWorld = initializeWorld();
       if (import.meta.hot)
         import.meta.hot.dispose(() => {
+          disposeWorld();
           disposeStory();
           disposeUI();
         });
