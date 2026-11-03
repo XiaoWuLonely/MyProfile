@@ -57,7 +57,8 @@
   position: relative;
   width: 57%;
   perspective: 1200px;
-  transform-style: preserve-3d;
+  /* Project each sheet independently so rear paper cannot cross the preview. */
+  transform-style: flat;
 }
 .preview-board {
   margin: 0;
@@ -65,7 +66,7 @@
   padding: 15px 15px 35px;
   background: var(--paper-light);
   box-shadow: 2px 15px 35px #59422626;
-  transform-style: preserve-3d;
+  transform-style: flat;
   z-index: 2;
 }
 .preview-board img {
@@ -85,6 +86,7 @@
 .paper-piece {
   position: absolute;
   inset: -4%;
+  z-index: 1;
   background: var(--paper-light);
   box-shadow: 0 4px 12px #402f2014;
   clip-path: polygon(
