@@ -3,6 +3,9 @@
   data-stage-art
   aria-label="航图升成立体机场，旅客分布与趋势的示意演出"
 >
+  <div class="airport-wayfinding" data-wayfinding aria-hidden="true">
+    AERO <span>↗</span>
+  </div>
   <p class="airport-coordinate">A PAPER TERMINAL / SPATIAL DATA</p>
   <div class="airport-model" data-read-pose>
     <svg viewBox="0 0 700 430" aria-hidden="true">
@@ -86,6 +89,39 @@
   </div>
 </figure>
 <style is:global>
+  .airport-wayfinding {
+    position: absolute;
+    left: 1%;
+    top: 16%;
+    width: 120px;
+    height: 40px;
+    rotate: -3deg;
+    z-index: 4;
+    background: #f5e9d1;
+    border: 1px solid #bda786;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-size: 13px;
+    letter-spacing: 0.13em;
+    box-shadow: 3px 9px 18px #4f392321;
+  }
+  .airport-wayfinding span {
+    color: var(--rust);
+    font: 30px/1 var(--serif);
+  }
+  @media (max-width: 767px) {
+    .airport-wayfinding {
+      width: 72px;
+      height: 25px;
+      font-size: 9px;
+      gap: 7px;
+    }
+    .airport-wayfinding span {
+      font-size: 20px;
+    }
+  }
   .world-backdrop::after {
     opacity: var(--world-haze, 1);
   }

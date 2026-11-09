@@ -3,6 +3,7 @@ import { storyScenes } from './story-data';
 import { stageProps } from './choreography';
 import { personalChapters } from './personal-chapters';
 import { choreographProject } from './project-scenes';
+import { prepareStoryHandoffs } from './story-handoffs';
 
 export function createStoryTimeline(
   stage: HTMLElement,
@@ -11,6 +12,7 @@ export function createStoryTimeline(
 ) {
   const panels = [...stage.querySelectorAll<HTMLElement>('[data-story-panel]')];
   const timeline = gsap.timeline({ paused: true });
+  const connect = prepareStoryHandoffs(stage, desktop);
   gsap.set(panels, { autoAlpha: 0 });
   storyScenes.forEach((scene) => {
     const panel = document.getElementById(scene.id)!;
@@ -137,6 +139,7 @@ export function createStoryTimeline(
     }
   });
   personalChapters(timeline);
+  connect(timeline);
   timeline.to(clock, { progress: 100, duration: 100, ease: 'none' }, 0);
 
   return timeline;

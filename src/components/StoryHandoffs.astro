@@ -1,0 +1,269 @@
+<div class="story-handoffs" aria-hidden="true">
+  <div class="handoff-cover" data-handoff="cover">
+    <span>M</span>
+  </div>
+  <div class="handoff-document" data-handoff="document">
+    {['left', 'right'].map((side) => (
+      <div class={`paper-shard shard-${side}`}>
+        <span class="shard-mark">✳</span>
+        <div class="shard-ink">
+          {[0, 1, 2, 3].map(() => (
+            <span></span>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+  <div class="handoff-threads" data-handoff="threads">
+    <svg viewBox="0 0 600 180" preserveAspectRatio="none">
+      <path d="M0 80C140 -10 210 170 300 80S450 -20 600 65" />
+      <path d="M0 110C140 20 210 190 300 110S450 10 600 95" />
+      <path d="M0 140C140 50 210 220 300 140S450 40 600 125" />
+    </svg>
+  </div>
+  <div class="handoff-flight" data-handoff="flight">
+    <span class="flight-label">
+      FROM SOIL
+      <br />
+      TO STORY ↗
+    </span>
+    <svg class="flight-crease" viewBox="0 0 200 120" preserveAspectRatio="none">
+      <path
+        d="M0 72L200 0L80 78L100 120M80 78L80 96"
+        fill="none"
+        stroke="#aa9675"
+        stroke-width="1.4"
+      />
+    </svg>
+  </div>
+  <div class="handoff-sign" data-handoff="sign">
+    <div class="handoff-sign-front">
+      AERO <span>↗</span>
+    </div>
+    <div class="handoff-sign-back">
+      <p>MENU</p>
+      <span>纸上的小小日常</span>
+    </div>
+  </div>
+  <div class="handoff-orbit" data-handoff="orbit">
+    <svg viewBox="0 0 600 180" preserveAspectRatio="none">
+      <path d="M0 130C100 160 80 30 190 70C260 100 260 150 360 80C420 20 480 20 560 40C590 20 595 10 600 10" />
+    </svg>
+  </div>
+</div>
+<style is:global>
+  .story-handoffs {
+    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 7;
+    pointer-events: none;
+    perspective: 1400px;
+  }
+  .story-active .story-handoffs {
+    display: block;
+  }
+  .story-handoffs > * {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 120px;
+    height: 160px;
+    opacity: 0;
+    visibility: hidden;
+    transform-origin: center;
+  }
+  .handoff-cover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--paper-light);
+    color: #f9efdb;
+    box-shadow: 4px 12px 20px #4e3b2120;
+  }
+  .handoff-cover span {
+    font: clamp(70px, 10vw, 150px)/1 var(--serif);
+  }
+  .paper-shard {
+    position: absolute;
+    inset: 0;
+    background: var(--handoff-paper, #fbf7ed);
+    filter: drop-shadow(3px 8px 8px #4b38241a);
+  }
+  .shard-left {
+    clip-path: polygon(
+      0 0,
+      51% 0,
+      48% 16%,
+      52% 32%,
+      49% 48%,
+      53% 65%,
+      49% 82%,
+      51% 100%,
+      0 100%
+    );
+  }
+  .shard-right {
+    clip-path: polygon(
+      51% 0,
+      100% 0,
+      100% 100%,
+      51% 100%,
+      49% 82%,
+      53% 65%,
+      49% 48%,
+      52% 32%,
+      48% 16%
+    );
+  }
+  .shard-mark {
+    position: absolute;
+    left: 36%;
+    top: 14%;
+    font: 38px/1 var(--serif);
+    color: var(--olive);
+  }
+  .shard-ink {
+    position: absolute;
+    left: 15%;
+    right: 15%;
+    top: 48%;
+    display: grid;
+    gap: 12px;
+  }
+  .shard-ink span {
+    height: 1px;
+    background: #8e80636e;
+  }
+  .handoff-threads,
+  .handoff-orbit {
+    overflow: visible;
+  }
+  .handoff-threads svg,
+  .handoff-orbit svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .handoff-threads path {
+    fill: none;
+    stroke: var(--olive);
+    stroke-width: 1.3;
+    vector-effect: non-scaling-stroke;
+  }
+  .handoff-threads path:nth-child(2) {
+    stroke: var(--rust);
+  }
+  .handoff-flight {
+    background: #bd966b;
+    filter: drop-shadow(3px 10px 8px #49351f25);
+    clip-path: polygon(
+      0% 0%,
+      50% 0%,
+      100% 0%,
+      100% 50%,
+      100% 100%,
+      50% 100%,
+      0% 100%,
+      0% 50%
+    );
+  }
+  .flight-label {
+    position: absolute;
+    left: 15%;
+    top: 37%;
+    padding: 7px;
+    background: #f6ecd9;
+    font-size: 8px;
+    line-height: 1.5;
+  }
+  .flight-crease {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+  }
+  .handoff-sign {
+    transform-style: preserve-3d;
+  }
+  .handoff-sign > div {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 3px 9px 18px #4f392321;
+  }
+  .handoff-sign-front {
+    gap: 15px;
+    background: #f5e9d1;
+    border: 1px solid #bda786;
+    font-size: 13px;
+    letter-spacing: 0.13em;
+  }
+  .handoff-sign-front span {
+    color: var(--rust);
+    font: 30px/1 var(--serif);
+  }
+  .handoff-sign-back {
+    flex-direction: column;
+    transform: rotateY(180deg);
+    background: #a44c32;
+    color: #fbf7ed;
+  }
+  .handoff-sign-back p {
+    font: 64px/1 var(--serif);
+  }
+  .handoff-sign-back span {
+    margin-top: 18px;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+  }
+  .handoff-orbit path {
+    fill: none;
+    stroke: #7b8c5e;
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+  }
+  @media (max-width: 1023px) {
+    .handoff-sign-back p {
+      font-size: 49px;
+    }
+  }
+  @media (max-width: 767px) {
+    .shard-mark {
+      font-size: 22px;
+    }
+    .shard-ink {
+      gap: 7px;
+    }
+    .flight-label {
+      font-size: 5px;
+      padding: 4px;
+    }
+    .handoff-sign-front {
+      font-size: 9px;
+      gap: 7px;
+    }
+    .handoff-sign-front span {
+      font-size: 20px;
+    }
+    .handoff-sign-back p {
+      font-size: 32px;
+    }
+    .handoff-sign-back span {
+      font-size: 6px;
+      margin-top: 8px;
+    }
+  }
+  @media (max-height: 650px) and (max-width: 767px) {
+    .handoff-sign-back p {
+      font-size: 25px;
+    }
+    .handoff-sign-back span {
+      font-size: 5px;
+    }
+  }
+</style>

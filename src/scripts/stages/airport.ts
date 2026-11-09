@@ -53,10 +53,10 @@ export function choreographAirport(
       y: 0,
       rotation: 0,
       opacity: 1,
-      duration: entry * 0.65,
+      duration: entry * 0.5,
       ease: 'power2.inOut',
     },
-    scene.start + entry * 0.07,
+    scene.start + entry * 0.2,
   );
   airport
     .querySelectorAll<SVGPathElement>('[data-airline],[data-airport-trend]')
@@ -91,6 +91,17 @@ export function choreographAirport(
     { scaleX: 0, transformOrigin: 'left' },
     { scaleX: 1, duration: entry * 0.3, ease: 'power2.out' },
     scene.start + entry * 0.65,
+  );
+  timeline.fromTo(
+    airport.querySelector('[data-wayfinding]'),
+    { opacity: 0 },
+    { opacity: 1, duration: entry * 0.15 },
+    scene.start + entry * 0.8,
+  );
+  timeline.to(
+    airport.querySelector('[data-wayfinding]'),
+    { opacity: 0, duration: exit * 0.1 },
+    scene.leave,
   );
   timeline.fromTo(
     panel.querySelector('.scene-copy'),

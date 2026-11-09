@@ -20,26 +20,32 @@ export function choreographProject(
     const nodes = knowledge.querySelectorAll('[data-knowledge-node]');
     timeline.fromTo(
       network,
-      { scale: 0.68, rotationZ: -7 },
+      { scale: 1, rotationZ: 0 },
       {
         scale: desktop ? 1.28 : 1.08,
         rotationZ: 2,
-        duration: entry * 0.55,
+        duration: entry * 0.25,
         ease: 'power2.inOut',
       },
-      scene.start,
+      scene.start + entry * 0.4,
     );
     timeline.to(
       network,
-      { scale: 1, rotationZ: 0, duration: entry * 0.45, ease: 'power2.out' },
-      scene.start + entry * 0.55,
+      { scale: 1, rotationZ: 0, duration: entry * 0.35, ease: 'power2.out' },
+      scene.start + entry * 0.65,
     );
     timeline.fromTo(
-      nodes,
+      nodes[0],
+      { x: 0, y: 0, rotationY: 0, opacity: 0 },
+      { x: 0, y: 0, rotationY: 0, opacity: 1, duration: entry * 0.15 },
+      scene.start + entry * 0.2,
+    );
+    timeline.fromTo(
+      [...nodes].slice(1),
       {
-        x: (i: number) => (i % 2 ? 1 : -1) * (desktop ? 180 : 65),
-        y: (i: number) => (i < 2 ? -65 : 75),
-        rotationY: (i: number) => (i % 2 ? -55 : 55),
+        x: (i: number) => ((i + 1) % 2 ? 1 : -1) * (desktop ? 180 : 65),
+        y: (i: number) => (i < 1 ? -65 : 75),
+        rotationY: (i: number) => ((i + 1) % 2 ? -55 : 55),
         opacity: 0,
       },
       {
@@ -51,7 +57,7 @@ export function choreographProject(
         stagger: entry * 0.09,
         ease: 'power3.inOut',
       },
-      scene.start,
+      scene.start + entry * 0.09,
     );
     knowledge
       .querySelectorAll<SVGPathElement>('[data-network-line]')
@@ -108,6 +114,11 @@ export function choreographProject(
         stagger: exit * 0.05,
         ease: 'power2.in',
       },
+      scene.leave,
+    );
+    timeline.to(
+      knowledge.querySelector('.knowledge-threads'),
+      { opacity: 0, duration: exit * 0.25 },
       scene.leave,
     );
     timeline.to(

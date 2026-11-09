@@ -141,7 +141,7 @@ export function createAirportWorld(
       Math.atan2(-tangent.x, -tangent.z),
       Math.sin(t * Math.PI) * 0.25,
     );
-    plane.visible = exit < 0.7;
+    plane.visible = entry >= 0.2 && exit < 0.7;
     status =
       exit > 0.01
         ? 'folding'

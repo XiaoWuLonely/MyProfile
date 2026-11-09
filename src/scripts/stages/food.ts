@@ -10,27 +10,27 @@ export function choreographFood(
     exit = scene.end - scene.leave;
   timeline.fromTo(
     food.querySelector('.food-menu'),
-    { rotationZ: -14, y: 30 },
-    { rotationZ: -6, y: 0, duration: entry * 0.65, ease: 'power2.out' },
-    scene.start,
+    { opacity: 0 },
+    { opacity: 1, duration: entry * 0.08 },
+    scene.start + entry * 0.18,
   );
   timeline.fromTo(
     food.querySelector('.food-menu-cover'),
     { rotationY: 0 },
-    { rotationY: -180, duration: entry * 0.55, ease: 'power2.inOut' },
-    scene.start,
+    { rotationY: -180, duration: entry * 0.4, ease: 'power2.inOut' },
+    scene.start + entry * 0.32,
   );
   timeline.fromTo(
     food.querySelector('.food-plate'),
-    { rotationX: 80, scale: 0.2, opacity: 0 },
+    { rotationX: 58, scale: 1, opacity: 0 },
     {
       rotationX: 58,
       scale: 1,
       opacity: 1,
-      duration: entry * 0.5,
+      duration: entry * 0.12,
       ease: 'power2.out',
     },
-    scene.start + entry * 0.15,
+    scene.start + entry * 0.34,
   );
   timeline.fromTo(
     food.querySelectorAll('[data-meal-layer]'),
@@ -43,11 +43,11 @@ export function choreographFood(
       y: 0,
       rotation: 0,
       opacity: 1,
-      duration: entry * 0.3,
-      stagger: entry * 0.07,
+      duration: entry * 0.25,
+      stagger: entry * 0.06,
       ease: 'power2.inOut',
     },
-    scene.start + entry * 0.25,
+    scene.start + entry * 0.35,
   );
   timeline.fromTo(
     food.querySelector('.fries-sleeve'),
