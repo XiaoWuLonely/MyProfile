@@ -1,20 +1,24 @@
 import type { gsap as animationEngine } from 'gsap';
 type Timeline = ReturnType<typeof animationEngine.timeline>;
 export function personalChapters(timeline: Timeline) {
+  timeline.set('.envelope-wing', { zIndex: 4 }, 0);
   timeline.fromTo(
     '.envelope-wing',
     { rotationX: 0 },
-    { rotationX: -170, duration: 1.5, ease: 'power2.inOut' },
+    { rotationX: -180, duration: 1.5, ease: 'power2.inOut' },
     93.3,
   );
+  // Switch behind the letter while the lid is edge-on; reversing restores it.
+  timeline.set('.envelope-wing', { zIndex: 1 }, 94.05);
   timeline.fromTo(
     '.letter-paper',
-    { y: 85 },
-    { y: -20, duration: 1.7, ease: 'power2.out' },
-    94,
+    { yPercent: 61 },
+    { yPercent: 0, duration: 1.6, ease: 'power2.out' },
+    94.1,
   );
-  timeline.to(
+  timeline.fromTo(
     '.wax-seal',
+    { scale: 1, opacity: 1 },
     { scale: 0.6, opacity: 0, duration: 0.5, ease: 'power1.in' },
     93.1,
   );
