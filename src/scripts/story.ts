@@ -33,6 +33,8 @@ export function initializeStory() {
   let trigger: ScrollTrigger | undefined;
   let smoother: ScrollSmoother | undefined;
   let jump: ((p: number) => void) | undefined;
+  let pendingProgress = () => preserved;
+  let freezeScroll = () => {};
   let disposeMode = () => {};
   const originalRestoration = history.scrollRestoration;
   const seek = () => {
@@ -68,6 +70,23 @@ export function initializeStory() {
     let disposed = false;
     let ready = false;
     let refreshing = false;
+    let observedScrollY = scrollY;
+    const collectPendingProgress = () => {
+      if (!trigger || Math.abs(scrollY - observedScrollY) <= 1)
+        return preserved;
+      return gsap.utils.clamp(
+        0,
+        100,
+        preserved +
+          ((scrollY - observedScrollY) / (trigger.end - trigger.start)) * 100,
+      );
+    };
+    pendingProgress = collectPendingProgress;
+    freezeScroll = () => {
+      // A viewport change may clamp the native offset. Only new input after
+      // freezing should move the saved pose while a rebuild is pending.
+      if (ready && !switching) observedScrollY = scrollY;
+    };
     const mountedSize = { width: innerWidth, height: innerHeight };
     let intro: gsap.core.Timeline | undefined;
     const finishIntro = () => {
@@ -92,6 +111,7 @@ export function initializeStory() {
         innerWidth !== mountedSize.width ||
         Math.abs(innerHeight - mountedSize.height) >= 120
       ) {
+        freezeScroll();
         switching = true;
         generation++;
         clearTimeout(timer);
@@ -100,6 +120,7 @@ export function initializeStory() {
       }
       const p = timeline.time();
       if (ready) preserved = p;
+      observedScrollY = scrollY;
       if (p > 0 && intro) finishIntro();
       worldState.progress = p;
       worldState.travel = cameraPosition(p);
@@ -151,6 +172,7 @@ export function initializeStory() {
         smooth.scrollTrigger.getTween()?.progress(1);
       }
       timeline.time(p);
+      observedScrollY = scrollY;
       refreshing = previous;
       render();
     };
@@ -178,9 +200,11 @@ export function initializeStory() {
       invalidateOnRefresh: true,
     });
     ScrollTrigger.refresh();
+    stage.dataset.scrollDistance = (trigger.end - trigger.start).toFixed(0);
     restore(preserved);
     frame = requestAnimationFrame(() => {
       if (disposed || !trigger || currentGeneration !== generation) return;
+      preserved = collectPendingProgress();
       restore(preserved);
       switching = false;
       ready = true;
@@ -246,6 +270,8 @@ export function initializeStory() {
       smooth.kill();
       smoother = undefined;
       jump = undefined;
+      pendingProgress = () => preserved;
+      freezeScroll = () => {};
       document.documentElement.classList.remove('story-active');
       gsap.set(panels, { clearProps: 'opacity,visibility' });
       panels.forEach((panel) => {
@@ -257,7 +283,7 @@ export function initializeStory() {
     clearTimeout(timer);
     generation++;
     switching = true;
-    const p = preserved;
+    const p = pendingProgress();
     // Cancel any native smooth-scroll left by the reading layout before rebuilding.
     window.scrollTo({ top: scrollY, behavior: 'instant' });
     disposeMode();
@@ -276,6 +302,7 @@ export function initializeStory() {
     }
   };
   const mediaChange = () => {
+    freezeScroll();
     switching = true;
     rebuild();
   };
@@ -290,6 +317,7 @@ export function initializeStory() {
       )
         return;
       size = { width: innerWidth, height: innerHeight };
+      freezeScroll();
       switching = true;
       generation++;
       clearTimeout(timer);
