@@ -1,0 +1,358 @@
+---
+const documents = [
+  ['01 / DOCUMENT', '把资料放进来', '文档与笔记'],
+  ['02 / ORGANIZE', '让知识有结构', '整理与管理'],
+  ['03 / QUESTION', '从一个问题出发', '把好奇写下来'],
+  ['04 / CONNECT', '找到相关的线索', '让片段彼此相连'],
+];
+---
+
+<figure
+  class="knowledge-stage"
+  data-stage-art
+  aria-label="文档整理、知识关联与流式回答的纸上演示"
+>
+  <div class="knowledge-network" data-read-pose>
+    <svg
+      class="knowledge-threads"
+      viewBox="0 0 600 440"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <path data-network-line d="M95 70C230 15 205 190 300 190S415 50 505 95" />
+      <path
+        data-network-line
+        d="M105 290C220 330 210 190 300 190S415 345 500 305"
+      />
+      <path data-network-line d="M300 190C260 255 390 290 350 390" />
+    </svg>
+    {documents.map(([number, title, detail], i) => (
+      <div class={`knowledge-node node-${i}`} data-knowledge-node>
+        <p class="knowledge-number">{number}</p>
+        <p class="knowledge-node-title">{title}</p>
+        <span class="knowledge-paper-rule" aria-hidden="true"></span>
+        <p class="knowledge-detail">{detail}</p>
+      </div>
+    ))}
+    <div class="knowledge-core" data-knowledge-core>
+      <span aria-hidden="true">✳</span>
+      <p>
+        知识，
+        <br />
+        开始连接。
+      </p>
+    </div>
+    <div class="knowledge-answer">
+      <p class="knowledge-number">STREAMING ANSWER / 过程示意</p>
+      <p class="knowledge-answer-text">
+        {['从资料里', '找到线索，', '让回答', '慢慢成形。'].map((word) => (
+          <span data-answer-word>{word}</span>
+        ))}
+      </p>
+      <span class="knowledge-cursor" aria-hidden="true"></span>
+    </div>
+  </div>
+</figure>
+
+<style is:global>
+  .stage-knowflow {
+    display: block;
+  }
+  .stage-knowflow .scene-copy {
+    position: absolute;
+    left: var(--gutter);
+    bottom: 15%;
+    width: 29%;
+  }
+  .knowledge-stage {
+    position: absolute;
+    inset: 15% 5% 13% 29%;
+    margin: 0;
+    perspective: 1500px;
+  }
+  .knowledge-network {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: flat;
+  }
+  .knowledge-threads {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: visible;
+  }
+  .knowledge-threads path {
+    fill: none;
+    stroke: #818e61;
+    stroke-width: 1.5;
+  }
+  .knowledge-threads path:nth-child(2) {
+    stroke: var(--rust);
+  }
+  .knowledge-node {
+    position: absolute;
+    width: 27%;
+    min-height: 120px;
+    padding: 18px 20px;
+    background: var(--paper-light);
+    box-shadow: 3px 9px 20px #493b1825;
+    z-index: 2;
+  }
+  .knowledge-node.node-0 {
+    left: 0;
+    top: 4%;
+    rotate: -9deg;
+  }
+  .knowledge-node.node-1 {
+    right: 0;
+    top: 10%;
+    rotate: 8deg;
+    background: #e3dfc6;
+  }
+  .knowledge-node.node-2 {
+    left: 3%;
+    top: 46%;
+    rotate: -6deg;
+    background: #e9d4b4;
+  }
+  .knowledge-node.node-3 {
+    right: 1%;
+    top: 49%;
+    rotate: 7deg;
+  }
+  .knowledge-number {
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    line-height: 1.5;
+  }
+  .knowledge-node-title {
+    margin-top: 15px;
+    font: 22px/1.5 var(--serif);
+  }
+  .knowledge-paper-rule {
+    display: block;
+    width: 46px;
+    height: 1px;
+    background: var(--rust);
+    margin: 12px 0 8px;
+  }
+  .knowledge-detail {
+    font-size: 10px;
+    color: var(--ink);
+  }
+  .knowledge-core {
+    position: absolute;
+    left: 40%;
+    top: 28%;
+    width: 20%;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #a44c32;
+    color: var(--paper-light);
+    border-radius: 48% 52% 53% 47%;
+    z-index: 3;
+    box-shadow: 0 12px 24px #68452b22;
+  }
+  .knowledge-core > span {
+    font-size: clamp(30px, 3.3vw, 52px);
+    line-height: 1;
+  }
+  .knowledge-core p {
+    margin-top: 8px;
+    font: 20px/1.3 var(--serif);
+  }
+  .knowledge-answer {
+    position: absolute;
+    left: 19%;
+    right: 0;
+    bottom: 0;
+    padding: 22px 30px;
+    background: var(--paper-light);
+    border-left: 3px solid var(--rust);
+    z-index: 4;
+    box-shadow: 3px 8px 17px #493b181a;
+  }
+  .knowledge-answer-text {
+    margin-top: 10px;
+    font: 27px/1.5 var(--serif);
+  }
+  .knowledge-answer-text span {
+    display: inline-block;
+  }
+  .knowledge-cursor {
+    display: inline-block;
+    position: absolute;
+    right: 22px;
+    bottom: 23px;
+    width: 1px;
+    height: 22px;
+    background: var(--rust);
+  }
+  @media (max-width: 1023px) {
+    .knowledge-node {
+      padding: 14px;
+      min-height: 100px;
+    }
+    .knowledge-node-title {
+      font-size: 18px;
+    }
+    .knowledge-core p {
+      font-size: 17px;
+    }
+    .knowledge-answer {
+      padding: 18px;
+    }
+    .knowledge-answer-text {
+      font-size: 22px;
+    }
+  }
+  @media (max-width: 767px) {
+    .knowledge-detail,
+    .knowledge-paper-rule {
+      display: none;
+    }
+    .stage-knowflow {
+      display: flex;
+    }
+    .stage-knowflow .scene-copy {
+      position: relative;
+      inset: auto;
+      width: 100%;
+    }
+    .knowledge-stage {
+      position: relative;
+      inset: auto;
+      width: 94%;
+      height: 215px;
+      flex: 0 0 215px;
+      margin-inline: auto;
+    }
+    .knowledge-node {
+      width: 29%;
+      min-height: 53px;
+      padding: 8px;
+    }
+    .knowledge-node.node-0 {
+      top: 1%;
+    }
+    .knowledge-node.node-1 {
+      top: 3%;
+    }
+    .knowledge-node.node-2 {
+      top: 40%;
+    }
+    .knowledge-node.node-3 {
+      top: 42%;
+    }
+    .knowledge-number {
+      font-size: 6px;
+    }
+    .knowledge-node-title {
+      font: 13px/1.4 var(--serif);
+      margin-top: 5px;
+    }
+    .knowledge-paper-rule {
+      margin: 6px 0 4px;
+      width: 26px;
+    }
+    .knowledge-detail {
+      font-size: 7px;
+    }
+    .knowledge-core {
+      left: 38%;
+      top: 26%;
+      width: 24%;
+    }
+    .knowledge-core > span {
+      font-size: 25px;
+    }
+    .knowledge-core p {
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    .knowledge-answer {
+      left: 0;
+      padding: 9px 11px;
+    }
+    .knowledge-answer-text {
+      font-size: 15px;
+      margin-top: 4px;
+    }
+    .knowledge-cursor {
+      right: 8px;
+      bottom: 11px;
+      height: 14px;
+    }
+  }
+  @media (max-height: 650px) and (max-width: 767px) {
+    .knowledge-stage {
+      height: 170px;
+      flex-basis: 170px;
+    }
+    .knowledge-detail,
+    .knowledge-paper-rule {
+      display: none;
+    }
+    .knowledge-node {
+      min-height: 42px;
+      padding: 6px;
+    }
+    .knowledge-node-title {
+      font-size: 11px;
+    }
+    .knowledge-core {
+      top: 23%;
+      width: 23%;
+    }
+    .knowledge-core p {
+      font-size: 11px;
+    }
+    .knowledge-answer-text {
+      font-size: 13px;
+    }
+    .knowledge-answer {
+      padding: 7px 10px;
+    }
+  }
+  @media (max-height: 580px) and (min-width: 768px) {
+    .knowledge-stage {
+      inset: 20% 4% 15% 32%;
+    }
+    .stage-knowflow .scene-copy {
+      width: 29%;
+      bottom: 14%;
+    }
+    .knowledge-node {
+      padding: 8px;
+      min-height: 57px;
+    }
+    .knowledge-node-title {
+      margin-top: 4px;
+      font-size: 15px;
+    }
+    .knowledge-detail,
+    .knowledge-paper-rule {
+      display: none;
+    }
+    .knowledge-core p {
+      font-size: 14px;
+      margin-top: 3px;
+    }
+    .knowledge-core > span {
+      font-size: 27px;
+    }
+    .knowledge-answer {
+      padding: 10px 14px;
+    }
+    .knowledge-answer-text {
+      margin-top: 4px;
+      font-size: 18px;
+    }
+  }
+</style>

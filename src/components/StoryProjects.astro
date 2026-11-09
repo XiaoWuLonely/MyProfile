@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import { projectRoles } from '../scripts/story-data';
 import Book from './props/Book.astro';
 import JournalStage from './stages/JournalStage.astro';
+import KnowledgeStage from './stages/KnowledgeStage.astro';
 import Knowledge from './props/Knowledge.astro';
 import Farm from './props/Farm.astro';
 import Airport from './props/Airport.astro';
@@ -36,6 +37,8 @@ const projects = (await getCollection('projects')).sort(
   >
     {id === 'myblog' ? (
       <JournalStage />
+    ) : id === 'knowflow' ? (
+      <KnowledgeStage />
     ) : (
       <div class="preview-collage">
         <div class="paper-piece piece-a" data-piece></div>
