@@ -1,6 +1,7 @@
 import type { Timeline, Scene } from './stages/types';
 import { choreographField } from './stages/field';
 import { choreographAirport } from './stages/airport';
+import { choreographFood } from './stages/food';
 
 export function choreographProject(
   timeline: Timeline,
@@ -10,6 +11,7 @@ export function choreographProject(
 ) {
   if (choreographField(timeline, panel, scene, desktop)) return true;
   if (choreographAirport(timeline, panel, scene)) return true;
+  if (choreographFood(timeline, panel, scene)) return true;
   const knowledge = panel.querySelector('.knowledge-stage');
   if (knowledge) {
     const entry = scene.read - scene.start,

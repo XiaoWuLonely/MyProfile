@@ -1,0 +1,533 @@
+---
+const layers = [
+  ['bun', 100, 'M5 92C5 20 42 4 110 4S215 20 215 92Z', '#d3a566', 0],
+  [
+    'lettuce',
+    40,
+    'M4 12Q18 0 32 10T60 10T88 10T116 10T144 10T172 10T200 10L216 14L207 35H12Z',
+    '#899b66',
+    0.42,
+  ],
+  ['tomato', 30, 'M7 7Q110 0 213 7L209 24Q110 30 11 24Z', '#b96d4b', 0.53],
+  ['patty', 40, 'M8 9Q110 1 212 9L208 33Q110 40 12 33Z', '#8c6348', 0.62],
+  ['base', 55, 'M5 5H215Q209 52 110 52T5 5Z', '#c58f55', 0.72],
+] as const;
+---
+
+<figure
+  class="food-stage"
+  data-stage-art
+  aria-label="从菜单到餐盘再到点单纸条的纸上交互示意"
+>
+  <div class="food-worktop" data-read-pose>
+    <div class="food-menu">
+      <div class="food-menu-inner">
+        <p class="food-small">A LITTLE EVERYDAY</p>
+        <p class="food-menu-title">
+          菜单<em>留一份日常。</em>
+        </p>
+        <ol class="food-menu-list">
+          <li>看看菜单</li>
+          <li>选个组合</li>
+          <li>确认选择</li>
+        </ol>
+      </div>
+      <div class="food-menu-cover" aria-hidden="true">
+        <p>MENU</p>
+        <span>纸上的小小日常</span>
+      </div>
+    </div>
+    <div class="food-plate" aria-hidden="true">
+      <span></span>
+    </div>
+    <div class="paper-burger" aria-hidden="true">
+      {layers.map(([name, height, path, color, top], i) => (
+        <svg
+          class={`meal-layer meal-${name}`}
+          data-meal-layer
+          viewBox={`0 0 220 ${height}`}
+          style={`--layer:${i};--top:${top * 100}%`}
+        >
+          <path d={path} fill={color} />
+          {i === 0 && (
+            <g stroke="#f6dfba" stroke-width="3" stroke-linecap="round">
+              <path d="M46 45l8-3M72 29l7 1M104 27l7 2M135 33l7 3M168 48l7 4" />
+            </g>
+          )}
+        </svg>
+      ))}
+    </div>
+    <div class="paper-fries" aria-hidden="true">
+      {[0, 1, 2, 3, 4].map((i) => (
+        <span
+          class="fries-stick"
+          data-fries-stick
+          style={`--stick:${i};--lift:${i % 2 ? 8 : 0}px`}
+        ></span>
+      ))}
+      <div class="fries-sleeve"></div>
+    </div>
+    <div class="food-receipt" data-order-receipt>
+      <p>ORDER NOTE / 示意</p>
+      <div class="receipt-ink" aria-hidden="true">
+        {[0, 1, 2].map((i) => (
+          <span data-receipt-ink style={`width:${90 - i * 17}%`}></span>
+        ))}
+      </div>
+    </div>
+  </div>
+  <figcaption>
+    菜单 <span>→</span> 组合 <span>→</span> 交互
+  </figcaption>
+</figure>
+<style is:global>
+  .stage-mcdonalds {
+    display: block;
+  }
+  .stage-mcdonalds .project-poem {
+    text-wrap: balance;
+  }
+  @media (min-width: 1024px) {
+    .stage-mcdonalds .project-poem {
+      font-size: 22px;
+    }
+  }
+  .stage-mcdonalds .scene-copy {
+    position: absolute;
+    left: var(--gutter);
+    top: 24%;
+    width: 25%;
+  }
+  .food-stage {
+    position: absolute;
+    inset: 18% 4% 13% 30%;
+    margin: 0;
+    perspective: 1400px;
+  }
+  .food-worktop {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: flat;
+  }
+  .food-menu {
+    position: absolute;
+    left: 6%;
+    top: 3%;
+    width: 29%;
+    height: 68%;
+    rotate: -6deg;
+    perspective: 1000px;
+  }
+  .food-menu-inner {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    padding: 27px 25px;
+    background: #fbf3e3;
+    box-shadow: 5px 12px 22px #50382025;
+  }
+  .food-small {
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    line-height: 1.5;
+  }
+  .food-menu-title {
+    margin-top: 18px;
+    font: 38px/1.25 var(--serif);
+  }
+  .food-menu-title em {
+    display: block;
+    font-size: 16px;
+    margin-top: 8px;
+    color: var(--rust);
+  }
+  .food-menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 25px 0 0;
+    display: grid;
+    gap: 18px;
+  }
+  .food-menu-list li {
+    border-bottom: 1px solid #b4a58b66;
+    padding-bottom: 8px;
+    font: 20px/1.5 var(--serif);
+  }
+  .food-menu-cover {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #a44c32;
+    color: #fbf7ed;
+    backface-visibility: hidden;
+    transform-origin: left center;
+    transform: rotateY(-180deg);
+  }
+  .food-menu-cover p {
+    font: 64px/1 var(--serif);
+  }
+  .food-menu-cover span {
+    margin-top: 18px;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+  }
+  .food-plate {
+    position: absolute;
+    left: 35%;
+    top: 42%;
+    width: 62%;
+    height: 45%;
+    border-radius: 50%;
+    background: #f9f1e1;
+    border: 1px solid #cbb99a;
+    transform: rotateX(58deg);
+    box-shadow:
+      0 18px 0 #d1c0a344,
+      0 30px 25px #59412222;
+    z-index: 1;
+  }
+  .food-plate span {
+    position: absolute;
+    inset: 12%;
+    border: 1px solid #ccbda255;
+    border-radius: 50%;
+  }
+  .paper-burger {
+    position: absolute;
+    width: clamp(160px, 19vw, 270px);
+    aspect-ratio: 1/0.9;
+    left: 45%;
+    top: 26%;
+    z-index: 4;
+  }
+  .meal-layer {
+    position: absolute;
+    left: 0;
+    top: var(--top);
+    width: 100%;
+    height: auto;
+    z-index: calc(8 - var(--layer));
+    overflow: visible;
+    filter: drop-shadow(0 5px 2px #67472e24);
+  }
+  .paper-fries {
+    position: absolute;
+    width: 95px;
+    height: 145px;
+    left: 82%;
+    top: 39%;
+    rotate: 8deg;
+    z-index: 5;
+  }
+  .fries-stick {
+    position: absolute;
+    left: calc(7px + var(--stick) * 16px);
+    top: calc(8px + var(--lift));
+    width: 11px;
+    height: 91px;
+    background: #d6b16b;
+    border-right: 2px solid #bd9251;
+    transform-origin: center bottom;
+    rotate: calc((var(--stick) - 2) * 4deg);
+  }
+  .fries-sleeve {
+    position: absolute;
+    inset: 36% 0 0;
+    background: #b96847;
+    clip-path: polygon(0 0, 100% 0, 89% 100%, 12% 100%);
+    filter: drop-shadow(3px 8px 4px #64432422);
+  }
+  .food-receipt {
+    position: absolute;
+    left: 48%;
+    bottom: 2%;
+    width: 34%;
+    height: 23%;
+    padding: 18px 20px;
+    z-index: 6;
+    rotate: 5deg;
+    background: #fbf7ed;
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% 94%,
+      91% 100%,
+      82% 94%,
+      73% 100%,
+      64% 94%,
+      55% 100%,
+      46% 94%,
+      37% 100%,
+      28% 94%,
+      19% 100%,
+      10% 94%,
+      0 100%
+    );
+    box-shadow: 3px 8px 18px #4a382622;
+    transform-origin: center top;
+  }
+  .food-receipt > p {
+    font-size: 8px;
+    letter-spacing: 0.1em;
+  }
+  .receipt-ink {
+    margin-top: 16px;
+    display: grid;
+    gap: 9px;
+  }
+  .receipt-ink span {
+    height: 1px;
+    background: #86765c88;
+    transform-origin: left;
+  }
+  .food-stage figcaption {
+    position: absolute;
+    right: 8%;
+    bottom: -4%;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+  .food-stage figcaption span {
+    color: var(--rust);
+    margin: 0 12px;
+  }
+  @media (max-width: 1023px) {
+    .food-menu-inner {
+      padding: 21px 17px;
+    }
+    .food-menu-title {
+      font-size: 30px;
+    }
+    .food-menu-list {
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .food-menu-list li {
+      font-size: 17px;
+    }
+    .food-menu-cover p {
+      font-size: 49px;
+    }
+    .paper-burger {
+      width: 190px;
+    }
+    .paper-fries {
+      width: 73px;
+      height: 119px;
+    }
+    .fries-stick {
+      width: 9px;
+      left: calc(4px + var(--stick) * 12px);
+      height: 72px;
+    }
+  }
+  @media (max-width: 767px) {
+    .stage-mcdonalds {
+      display: flex;
+    }
+    .stage-mcdonalds .scene-copy {
+      position: relative;
+      inset: auto;
+      width: 100%;
+    }
+    .food-stage {
+      position: relative;
+      inset: auto;
+      width: 98%;
+      height: 190px;
+      flex: 0 0 190px;
+      margin-inline: auto;
+    }
+    .food-menu {
+      height: 92%;
+      width: 30%;
+      top: 0;
+    }
+    .food-menu-inner {
+      padding: 12px;
+    }
+    .food-small {
+      font-size: 6px;
+    }
+    .food-menu-title {
+      font-size: 22px;
+      margin-top: 8px;
+    }
+    .food-menu-title em {
+      font-size: 10px;
+      margin-top: 5px;
+    }
+    .food-menu-list {
+      margin-top: 10px;
+      gap: 8px;
+    }
+    .food-menu-list li {
+      font-size: 10px;
+      padding-bottom: 4px;
+    }
+    .food-menu-list li:nth-child(3) {
+      display: none;
+    }
+    .food-menu-cover p {
+      font-size: 32px;
+    }
+    .food-menu-cover span {
+      font-size: 6px;
+      margin-top: 8px;
+    }
+    .food-plate {
+      top: 52%;
+    }
+    .paper-burger {
+      width: 130px;
+      left: 43%;
+      top: 14%;
+    }
+    .paper-fries {
+      width: 48px;
+      height: 85px;
+      top: 35%;
+    }
+    .fries-stick {
+      width: 6px;
+      left: calc(var(--stick) * 9px);
+      height: 55px;
+    }
+    .food-receipt {
+      padding: 9px 10px;
+      height: 29%;
+    }
+    .food-receipt > p {
+      font-size: 6px;
+    }
+    .receipt-ink {
+      gap: 5px;
+      margin-top: 8px;
+    }
+    .food-stage figcaption {
+      font-size: 8px;
+      bottom: -6%;
+      right: 3%;
+    }
+    .food-stage figcaption span {
+      margin: 0 7px;
+    }
+  }
+  @media (max-height: 650px) and (max-width: 767px) {
+    .food-stage {
+      height: 135px;
+      flex-basis: 135px;
+    }
+    .food-menu-inner {
+      padding: 9px;
+    }
+    .food-menu-title {
+      font-size: 18px;
+      margin-top: 6px;
+    }
+    .food-menu-title em {
+      font-size: 8px;
+      margin-top: 4px;
+    }
+    .food-menu-list {
+      gap: 5px;
+      margin-top: 8px;
+    }
+    .food-menu-list li {
+      font-size: 9px;
+      padding-bottom: 3px;
+    }
+    .food-menu-cover p {
+      font-size: 25px;
+    }
+    .food-menu-cover span {
+      font-size: 5px;
+    }
+    .paper-burger {
+      width: 95px;
+    }
+    .paper-fries {
+      width: 35px;
+      height: 63px;
+    }
+    .fries-stick {
+      width: 5px;
+      left: calc(var(--stick) * 7px);
+      height: 39px;
+    }
+    .food-receipt {
+      padding: 6px;
+    }
+    .food-receipt > p {
+      font-size: 5px;
+    }
+    .receipt-ink {
+      margin-top: 6px;
+      gap: 3px;
+    }
+    .food-stage figcaption {
+      bottom: -9%;
+      font-size: 7px;
+    }
+  }
+  @media (max-height: 580px) and (min-width: 768px) {
+    .food-stage {
+      inset: 22% 5% 15% 32%;
+    }
+    .stage-mcdonalds .scene-copy {
+      top: 23%;
+      width: 27%;
+    }
+    .food-menu-inner {
+      padding: 15px;
+    }
+    .food-menu-title {
+      font-size: 23px;
+      margin-top: 8px;
+    }
+    .food-menu-title em {
+      font-size: 11px;
+    }
+    .food-menu-list {
+      gap: 7px;
+      margin-top: 14px;
+    }
+    .food-menu-list li {
+      font-size: 13px;
+      padding-bottom: 4px;
+    }
+    .food-menu-cover p {
+      font-size: 40px;
+    }
+    .paper-burger {
+      width: 145px;
+      top: 12%;
+    }
+    .paper-fries {
+      width: 58px;
+      height: 89px;
+      top: 27%;
+    }
+    .fries-stick {
+      width: 7px;
+      left: calc(var(--stick) * 11px);
+      height: 56px;
+    }
+    .food-receipt {
+      padding: 10px;
+      height: 29%;
+    }
+    .food-receipt > p {
+      font-size: 6px;
+    }
+    .receipt-ink {
+      margin-top: 9px;
+      gap: 5px;
+    }
+  }
+</style>
