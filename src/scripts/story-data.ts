@@ -1,9 +1,9 @@
 export const storyScenes = [
-  { id: 'home', label: '开场原野', start: 0, read: 0, leave: 3, end: 8 },
+  { id: 'home', label: '开场原野', start: 0, read: 0, leave: 3, end: 7 },
   {
     id: 'project-myblog',
     label: 'MyBlog',
-    start: 8,
+    start: 7,
     read: 11,
     leave: 17,
     end: 20,
@@ -12,37 +12,37 @@ export const storyScenes = [
     id: 'project-knowflow',
     label: 'KnowFlow AI',
     start: 20,
-    read: 23,
-    leave: 29,
-    end: 32,
+    read: 32,
+    leave: 35,
+    end: 38,
   },
   {
     id: 'project-heyue',
     label: '禾跃通',
-    start: 32,
-    read: 35,
-    leave: 41,
-    end: 44,
+    start: 38,
+    read: 46,
+    leave: 50,
+    end: 52,
   },
   {
     id: 'project-zhifu',
     label: '智服 e 航',
-    start: 44,
-    read: 47,
-    leave: 53,
-    end: 56,
+    start: 52,
+    read: 64,
+    leave: 68,
+    end: 70,
   },
   {
     id: 'project-mcdonalds',
     label: '在线点餐',
-    start: 56,
-    read: 59,
-    leave: 65,
-    end: 68,
+    start: 70,
+    read: 77,
+    leave: 81,
+    end: 83,
   },
-  { id: 'about', label: '关于', start: 68, read: 71, leave: 77, end: 79 },
-  { id: 'journey', label: '经历', start: 79, read: 89, leave: 91, end: 93 },
-  { id: 'contact', label: '联系', start: 93, read: 96, leave: 100, end: 100 },
+  { id: 'about', label: '关于', start: 83, read: 85, leave: 87, end: 89 },
+  { id: 'journey', label: '经历', start: 89, read: 92, leave: 93, end: 94 },
+  { id: 'contact', label: '联系', start: 94, read: 97, leave: 100, end: 100 },
 ] as const;
 
 export const storyAnchors: Record<string, number> = Object.fromEntries(
@@ -59,14 +59,10 @@ export const projectRoles: Record<string, string> = {
   mcdonalds: 'Vue 课程实践',
 };
 
+const stops = storyScenes.flatMap((scene) => [scene.read, scene.leave]);
+const positions = storyScenes.flatMap((_, index) => [index, index]);
 export function cameraPosition(progress: number) {
   // Pauses cover every reading interval; travel is shared across adjacent scenes.
-  const stops = [
-    0, 3, 11, 17, 23, 29, 35, 41, 47, 53, 59, 65, 71, 77, 81, 89, 91, 96, 100,
-  ];
-  const positions = [
-    0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7.4, 7.4, 8, 8,
-  ];
   const p = Math.max(0, Math.min(100, progress));
   const index = stops.findIndex(
     (stop, i) => i < stops.length - 1 && p >= stop && p <= stops[i + 1],

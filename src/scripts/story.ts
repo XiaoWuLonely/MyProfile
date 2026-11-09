@@ -171,7 +171,7 @@ export function initializeStory() {
       id: 'paper-story',
       trigger: stage,
       start: 'top top',
-      end: () => `+=${innerHeight * (desktop.matches ? 20 : 16)}`,
+      end: () => `+=${innerHeight * (desktop.matches ? 22 : 18)}`,
       pin: stage,
       animation: timeline,
       scrub: true,

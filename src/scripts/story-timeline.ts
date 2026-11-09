@@ -1,6 +1,6 @@
 import { gsap } from 'gsap';
 import { storyScenes } from './story-data';
-import { stageProps, connectStages } from './choreography';
+import { stageProps } from './choreography';
 import { personalChapters } from './personal-chapters';
 import { choreographProject } from './project-scenes';
 
@@ -14,7 +14,7 @@ export function createStoryTimeline(
   gsap.set(panels, { autoAlpha: 0 });
   storyScenes.forEach((scene) => {
     const panel = document.getElementById(scene.id)!;
-    const entry = scene.id === 'journey' ? 2 : scene.read - scene.start;
+    const entry = scene.read - scene.start;
     const exit = scene.end - scene.leave;
     if (choreographProject(timeline, panel, scene, desktop)) {
       timeline.fromTo(
@@ -136,7 +136,6 @@ export function createStoryTimeline(
       );
     }
   });
-  connectStages(timeline);
   personalChapters(timeline);
   timeline.to(clock, { progress: 100, duration: 100, ease: 'none' }, 0);
 
