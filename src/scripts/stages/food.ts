@@ -68,18 +68,6 @@ export function choreographFood(
     scene.start + entry * 0.45,
   );
   timeline.fromTo(
-    food.querySelector('[data-order-receipt]'),
-    { scaleY: 0 },
-    { scaleY: 1, duration: entry * 0.2, ease: 'power2.out' },
-    scene.start + entry * 0.75,
-  );
-  timeline.fromTo(
-    food.querySelectorAll('[data-receipt-ink]'),
-    { scaleX: 0 },
-    { scaleX: 1, duration: entry * 0.08, stagger: entry * 0.02, ease: 'none' },
-    scene.start + entry * 0.86,
-  );
-  timeline.fromTo(
     panel.querySelector('.scene-copy'),
     { clipPath: 'inset(0 0 100% 0)' },
     { clipPath: 'inset(0 0 0% 0)', duration: entry * 0.25 },
@@ -110,11 +98,6 @@ export function choreographFood(
   timeline.to(
     food.querySelector('.paper-fries'),
     { y: -30, opacity: 0, duration: exit * 0.8 },
-    scene.leave,
-  );
-  timeline.to(
-    food.querySelector('[data-order-receipt]'),
-    { scaleY: 1.8, y: 30, opacity: 0, duration: exit, ease: 'power2.inOut' },
     scene.leave,
   );
   timeline.to(

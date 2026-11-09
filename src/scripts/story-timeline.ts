@@ -28,6 +28,17 @@ export function createStoryTimeline(
       timeline.to(panel, { autoAlpha: 0, duration: 0.4 }, scene.end - 0.4);
       return;
     }
+    if (['about', 'journey', 'contact'].includes(scene.id)) {
+      timeline.fromTo(
+        panel,
+        { autoAlpha: 0 },
+        { autoAlpha: 1, duration: 0.3 },
+        scene.start,
+      );
+      if (exit > 0)
+        timeline.to(panel, { autoAlpha: 0, duration: 0.35 }, scene.end - 0.35);
+      return;
+    }
     stageProps(timeline, panel, scene);
     const animateFrom = (
       selector: string,

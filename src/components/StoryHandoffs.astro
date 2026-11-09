@@ -1,4 +1,18 @@
 <div class="story-handoffs" aria-hidden="true">
+  <div class="story-ribbon" data-shared-receipt>
+    <div class="ribbon-face ribbon-left"></div>
+    <div class="ribbon-face ribbon-center"></div>
+    <div class="ribbon-face ribbon-right"></div>
+    <div class="ribbon-flap"></div>
+    <div class="ribbon-print">
+      <p>ORDER NOTE / 示意</p>
+      <div class="ribbon-ink">
+        {[0, 1, 2].map((i) => (
+          <span style={`width:${90 - i * 17}%`}></span>
+        ))}
+      </div>
+    </div>
+  </div>
   <div class="handoff-cover" data-handoff="cover">
     <span>M</span>
   </div>

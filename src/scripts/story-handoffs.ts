@@ -2,6 +2,7 @@ import { gsap } from 'gsap';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { storyScenes } from './story-data';
 import type { Timeline } from './stages/types';
+import { preparePersonalPaper } from './story-ribbon';
 gsap.registerPlugin(MotionPathPlugin);
 interface Box {
   x: number;
@@ -68,6 +69,7 @@ export function prepareStoryHandoffs(
     plate = box('.food-plate', undefined, true);
   const actor = (name: string) =>
     layer.querySelector(`[data-handoff="${name}"]`)!;
+  const personalPaper = preparePersonalPaper(stage, box);
   return (timeline) => {
     const cover = actor('cover');
     const coverEnd = blog.start + (blog.read - blog.start) * 0.25;
@@ -295,5 +297,6 @@ export function prepareStoryHandoffs(
       { autoAlpha: 0, duration: mEntry * 0.08 },
       food.start + mEntry * 0.46,
     );
+    personalPaper(timeline);
   };
 }

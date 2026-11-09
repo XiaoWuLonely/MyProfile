@@ -7,6 +7,58 @@ export function personalChapters(timeline: Timeline) {
   const contact = storyScenes.find((s) => s.id === 'contact')!;
   const contactEntry = contact.read - contact.start;
   const journeyEntry = journey.read - journey.start;
+  const aboutEntry = about.read - about.start;
+  timeline.fromTo(
+    '.about-panel .note-board',
+    { clipPath: 'inset(0 100% 0 0)', y: 10 },
+    {
+      clipPath: 'inset(0 0% 0 0)',
+      y: 0,
+      duration: aboutEntry * 0.8,
+      ease: 'power2.out',
+    },
+    about.start + 0.1,
+  );
+  timeline.fromTo(
+    '.about-panel .chapter-copy',
+    { opacity: 0, y: 12 },
+    { opacity: 1, y: 0, duration: aboutEntry * 0.65, ease: 'power2.out' },
+    about.start + aboutEntry * 0.3,
+  );
+  timeline.to(
+    '.about-panel .note-board,.about-panel .chapter-copy',
+    { opacity: 0, duration: 0.65, ease: 'power1.in' },
+    about.leave,
+  );
+  timeline.fromTo(
+    '.journey-panel .chapter-copy',
+    { opacity: 0, y: 8 },
+    { opacity: 1, y: 0, duration: journeyEntry * 0.3 },
+    journey.start,
+  );
+  timeline.fromTo(
+    '.journey-whisper',
+    { opacity: 0 },
+    { opacity: 1, duration: 0.3 },
+    journey.read - 0.3,
+  );
+  timeline.to(
+    '.journey-panel .chapter-copy,.journey-ribbon,.journey-whisper',
+    { opacity: 0, duration: 0.65 },
+    journey.leave,
+  );
+  timeline.fromTo(
+    '.contact-panel .chapter-copy',
+    { opacity: 0, y: 10 },
+    { opacity: 1, y: 0, duration: contactEntry * 0.4, ease: 'power2.out' },
+    contact.start + contactEntry * 0.6,
+  );
+  timeline.fromTo(
+    '.envelope-art',
+    { y: 12, rotationZ: -2 },
+    { y: 0, rotationZ: 0, duration: contactEntry, ease: 'power2.out' },
+    contact.start,
+  );
   timeline.set('.envelope-wing', { zIndex: 4 }, 0);
   timeline.fromTo(
     '.envelope-wing',
@@ -40,34 +92,25 @@ export function personalChapters(timeline: Timeline) {
   const skills = document.querySelectorAll('[data-skill]');
   timeline.fromTo(
     skills,
-    { y: 40, scale: 0.75, opacity: 0, rotation: (i) => (i % 2 ? -12 : 12) },
+    { clipPath: 'inset(0 100% 0 0)', opacity: 0 },
     {
-      y: 0,
-      scale: 1,
+      clipPath: 'inset(0 0% 0 0)',
       opacity: 1,
-      rotation: 0,
-      duration: 0.65,
-      stagger: 0.2,
-      ease: 'back.out(1.2)',
+      duration: aboutEntry * 0.25,
+      stagger: aboutEntry * 0.1,
+      ease: 'none',
     },
-    about.start + 0.7,
-  );
-  timeline.to(
-    skills,
-    { y: -25, opacity: 0, duration: 0.7, stagger: 0.15 },
-    about.leave,
+    about.start + aboutEntry * 0.3,
   );
   document.querySelectorAll('[data-year]').forEach((note, index) => {
     timeline.fromTo(
       note,
-      { y: 45, scale: 0.82, opacity: 0, rotation: index % 2 ? -7 : 7 },
+      { clipPath: 'inset(0 100% 0 0)', opacity: 0 },
       {
-        y: 0,
-        scale: 1,
+        clipPath: 'inset(0 0% 0 0)',
         opacity: 1,
-        rotation: 0,
         duration: journeyEntry * 0.3,
-        ease: 'power3.out',
+        ease: 'none',
       },
       journey.start + journeyEntry * (0.08 + index * 0.17),
     );
@@ -84,17 +127,26 @@ export function personalChapters(timeline: Timeline) {
       journey.start,
     );
   }
-  timeline.to(
-    '.journey-ribbon',
-    {
-      scaleX: 0.25,
-      scaleY: 0.7,
-      rotation: -12,
-      x: 180,
-      opacity: 0,
-      duration: journey.end - journey.leave,
-      ease: 'power2.inOut',
-    },
-    journey.leave,
-  );
+  for (const [selector, start, duration] of [
+    [
+      '.note-line [data-draw]',
+      about.start + aboutEntry * 0.25,
+      aboutEntry * 0.7,
+    ],
+    [
+      '.letter-paper [data-draw]',
+      contact.start + contactEntry * 0.6,
+      contactEntry * 0.35,
+    ],
+  ] as const) {
+    const path = document.querySelector<SVGPathElement>(selector);
+    if (!path) continue;
+    const length = path.getTotalLength();
+    timeline.fromTo(
+      path,
+      { strokeDasharray: length, strokeDashoffset: length },
+      { strokeDashoffset: 0, duration, ease: 'none' },
+      start,
+    );
+  }
 }
