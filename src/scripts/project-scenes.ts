@@ -1,13 +1,5 @@
-import type { gsap as animationEngine } from 'gsap';
-type Timeline = ReturnType<typeof animationEngine.timeline>;
-
-interface Scene {
-  id: string;
-  start: number;
-  read: number;
-  leave: number;
-  end: number;
-}
+import type { Timeline, Scene } from './stages/types';
+import { choreographField } from './stages/field';
 
 export function choreographProject(
   timeline: Timeline,
@@ -15,6 +7,7 @@ export function choreographProject(
   scene: Scene,
   desktop: boolean,
 ) {
+  if (choreographField(timeline, panel, scene, desktop)) return true;
   const knowledge = panel.querySelector('.knowledge-stage');
   if (knowledge) {
     const entry = scene.read - scene.start,

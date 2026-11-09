@@ -1,0 +1,405 @@
+---
+const terraces = ['olive', 'sand', 'sage', 'meadow'];
+---
+
+<figure
+  class="field-stage"
+  data-stage-art
+  aria-label="田间意象到农产品前端展示的纸上集市"
+>
+  <div class="field-terrain" data-read-pose>
+    {terraces.map((name, i) => (
+      <div class={`field-terrace terrace-${i} ${name}`} data-terrace>
+        <div class="field-ridges" aria-hidden="true">
+          {Array.from({ length: 7 }, () => (
+            <span data-ridge></span>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+  <svg class="field-trail" viewBox="0 0 600 400" aria-hidden="true">
+    <path data-field-line d="M60 260Q130 80 285 185T550 270" />
+  </svg>
+  {[0, 1, 2].map((i) => (
+    <div class={`field-crop crop-${i}`} data-crop aria-hidden="true">
+      <svg viewBox="0 0 100 180">
+        <g class="crop-breath">
+          <path
+            d="M50 173Q54 95 45 20"
+            fill="none"
+            stroke="#68784f"
+            stroke-width="3"
+          />
+          <path
+            d="M49 126Q10 125 8 94Q42 91 49 126M49 91Q83 87 89 53Q52 56 49 91M47 57Q17 52 18 26Q44 25 47 57"
+            fill={i === 1 ? '#a7b380' : '#849963'}
+            stroke="#68784f"
+            stroke-width="1.5"
+          />
+        </g>
+      </svg>
+    </div>
+  ))}
+  <div class="field-market-tag" data-market-tag>
+    <span class="field-tag-hole" aria-hidden="true"></span>
+    <p class="field-small">FROM THE FIELD / 03</p>
+    <svg viewBox="0 0 120 110" aria-hidden="true">
+      <circle cx="54" cy="63" r="34" fill="#c8814d" />
+      <path d="M54 29Q68 2 98 15Q85 39 54 29" fill="#7d8e5d" />
+      <path d="M54 31L55 16" stroke="#6d794c" stroke-width="3" />
+    </svg>
+    <p class="field-tag-title">
+      田间
+      <br />
+      有好物
+    </p>
+    <p class="field-small">团队实践 · 校赛二等奖</p>
+  </div>
+  <div class="field-parcel" data-field-parcel aria-hidden="true">
+    <span class="parcel-top"></span>
+    <span class="parcel-side"></span>
+    <span class="parcel-front"></span>
+    <span class="parcel-label">
+      FROM SOIL
+      <br />
+      TO STORY ↗
+    </span>
+  </div>
+  <figcaption>
+    产地 <span>→</span> 商品 <span>→</span> 连接
+  </figcaption>
+</figure>
+<style is:global>
+  .stage-heyue {
+    gap: 3%;
+  }
+  .stage-heyue .scene-copy {
+    width: 28%;
+    align-self: flex-start;
+    padding-top: 5%;
+  }
+  .field-stage {
+    position: relative;
+    width: 67%;
+    flex-shrink: 0;
+    height: 470px;
+    margin: 0;
+    perspective: 1400px;
+  }
+  .field-terrain {
+    position: absolute;
+    inset: 18% 3% 6% 10%;
+    transform: rotateX(53deg) rotateZ(-16deg);
+    transform-style: flat;
+  }
+  .field-terrace {
+    position: absolute;
+    width: 47%;
+    height: 43%;
+    box-shadow:
+      6px 14px 0 #8b775e25,
+      8px 18px 24px #62492a1a;
+    transform-origin: center bottom;
+    border: 2px solid #eee3ca;
+  }
+  .terrace-0 {
+    left: 0;
+    top: 0;
+    background: #afb986;
+  }
+  .terrace-1 {
+    left: 50%;
+    top: 5%;
+    background: #d8bd8f;
+  }
+  .terrace-2 {
+    left: 6%;
+    top: 49%;
+    background: #d1d4a7;
+  }
+  .terrace-3 {
+    left: 56%;
+    top: 54%;
+    background: #93a273;
+  }
+  .field-ridges {
+    position: absolute;
+    inset: 10%;
+    display: flex;
+    justify-content: space-around;
+  }
+  .field-ridges span {
+    display: block;
+    width: 2px;
+    height: 100%;
+    background: #586d4355;
+    transform-origin: bottom;
+  }
+  .field-trail {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .field-trail path {
+    stroke: #a77f57;
+    stroke-width: 1.4;
+    fill: none;
+    stroke-dasharray: 4 6;
+  }
+  .field-crop {
+    position: absolute;
+    width: 120px;
+    height: 215px;
+    top: 18%;
+    transform-origin: center bottom;
+  }
+  .field-crop svg {
+    width: 100%;
+    height: 100%;
+  }
+  .crop-0 {
+    left: 31%;
+  }
+  .crop-1 {
+    left: 48%;
+    top: 11%;
+  }
+  .crop-2 {
+    left: 64%;
+    top: 23%;
+  }
+  .crop-breath {
+    transform-box: fill-box;
+    transform-origin: center bottom;
+  }
+  .story-active .crop-breath {
+    animation: field-breath 5.5s ease-in-out infinite alternate;
+  }
+  .story-active .crop-1 .crop-breath {
+    animation-delay: -2s;
+  }
+  @keyframes field-breath {
+    from {
+      transform: rotate(-4deg);
+    }
+    to {
+      transform: rotate(5deg);
+    }
+  }
+  .field-market-tag {
+    position: absolute;
+    top: 5%;
+    left: 1%;
+    width: 160px;
+    padding: 30px 20px 20px;
+    background: #fbf4e4;
+    box-shadow: 3px 10px 20px #5b422622;
+    rotate: -8deg;
+    z-index: 4;
+  }
+  .field-tag-hole {
+    position: absolute;
+    top: 10px;
+    left: calc(50% - 4px);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #aa997b;
+  }
+  .field-small {
+    font-size: 8px;
+    line-height: 1.7;
+    letter-spacing: 0.08em;
+  }
+  .field-market-tag svg {
+    height: 90px;
+    margin: 12px auto;
+  }
+  .field-tag-title {
+    font: 27px/1.4 var(--serif);
+    margin-bottom: 20px;
+  }
+  .field-parcel {
+    position: absolute;
+    bottom: 5%;
+    right: 0;
+    width: 165px;
+    height: 125px;
+    z-index: 4;
+    filter: drop-shadow(4px 10px 7px #59432822);
+  }
+  .field-parcel > span {
+    position: absolute;
+    display: block;
+  }
+  .parcel-front {
+    left: 0;
+    top: 36%;
+    width: 72%;
+    height: 64%;
+    background: #bd966c;
+  }
+  .parcel-side {
+    left: 72%;
+    top: 0;
+    width: 28%;
+    height: 100%;
+    background: #9e7955;
+    clip-path: polygon(0 36%, 100% 0, 100% 64%, 0 100%);
+  }
+  .parcel-top {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 36%;
+    background: #d5b58e;
+    clip-path: polygon(28% 0, 100% 0, 72% 100%, 0 100%);
+  }
+  .parcel-label {
+    left: 12%;
+    top: 52%;
+    width: 47%;
+    padding: 5px 7px;
+    background: #f8edda;
+    font-size: 8px;
+    line-height: 1.4;
+  }
+  .field-stage figcaption {
+    position: absolute;
+    bottom: -16px;
+    left: 12%;
+    font-size: 10px;
+    letter-spacing: 0.13em;
+  }
+  .field-stage figcaption span {
+    color: var(--rust);
+    margin: 0 14px;
+  }
+  @media (max-width: 1023px) {
+    .field-stage {
+      height: 390px;
+    }
+    .field-market-tag {
+      width: 130px;
+      padding-inline: 14px;
+    }
+    .field-tag-title {
+      font-size: 23px;
+    }
+    .field-crop {
+      width: 90px;
+      height: 180px;
+    }
+    .field-parcel {
+      width: 130px;
+      height: 100px;
+    }
+  }
+  @media (max-width: 767px) {
+    .field-stage {
+      width: 94%;
+      height: 205px;
+      flex: 0 0 205px;
+      margin-inline: auto;
+    }
+    .stage-heyue .scene-copy {
+      width: 100%;
+      padding-top: 0;
+      align-self: stretch;
+    }
+    .field-market-tag {
+      width: 88px;
+      padding: 19px 9px 12px;
+      top: 0;
+    }
+    .field-market-tag svg {
+      height: 43px;
+      margin: 7px auto;
+    }
+    .field-tag-title {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .field-small {
+      font-size: 6px;
+    }
+    .field-crop {
+      width: 62px;
+      height: 112px;
+    }
+    .field-parcel {
+      width: 91px;
+      height: 69px;
+      bottom: 2%;
+    }
+    .parcel-label {
+      font-size: 5px;
+      padding: 3px;
+    }
+    .field-stage figcaption {
+      font-size: 8px;
+      bottom: -5px;
+      left: 9%;
+    }
+    .field-stage figcaption span {
+      margin: 0 8px;
+    }
+  }
+  @media (max-height: 650px) and (max-width: 767px) {
+    .field-stage {
+      height: 150px;
+      flex-basis: 150px;
+    }
+    .field-market-tag {
+      width: 72px;
+      padding-top: 17px;
+    }
+    .field-market-tag svg {
+      height: 31px;
+      margin-block: 3px;
+    }
+    .field-tag-title {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+    .field-market-tag .field-small:last-child {
+      display: none;
+    }
+    .field-crop {
+      height: 86px;
+      width: 48px;
+    }
+    .field-parcel {
+      width: 73px;
+      height: 55px;
+    }
+  }
+  @media (max-height: 580px) and (min-width: 768px) {
+    .field-stage {
+      height: 240px;
+    }
+    .field-market-tag {
+      width: 105px;
+      padding: 24px 12px 12px;
+    }
+    .field-market-tag svg {
+      height: 50px;
+      margin: 6px auto;
+    }
+    .field-tag-title {
+      font-size: 19px;
+      margin-bottom: 7px;
+    }
+    .field-crop {
+      height: 140px;
+      width: 70px;
+    }
+    .field-parcel {
+      width: 102px;
+      height: 78px;
+    }
+  }
+</style>
