@@ -1,0 +1,245 @@
+<figure
+  class="airport-stage"
+  data-stage-art
+  aria-label="航图升成立体机场，旅客分布与趋势的示意演出"
+>
+  <p class="airport-coordinate">A PAPER TERMINAL / SPATIAL DATA</p>
+  <div class="airport-model" data-read-pose>
+    <svg viewBox="0 0 700 430" aria-hidden="true">
+      <path
+        d="M25 272L335 118L672 249L366 408Z"
+        fill="#f9f0dc"
+        stroke="#c7b99c"
+      />
+      <path
+        d="M73 270L337 145L619 251M114 292L376 167M168 314L427 189M221 335L480 210M274 357L534 231"
+        stroke="#c1c4a0"
+        fill="none"
+      />
+      <g data-terminal-fold>
+        <path d="M230 208L392 247L392 311L230 271Z" fill="#d1bd98" />
+        <path d="M392 247L524 185L524 250L392 311Z" fill="#9ba77e" />
+        <path
+          d="M230 208L363 147L524 185L392 247Z"
+          fill="#fbf4e6"
+          stroke="#cab99a"
+        />
+        <path
+          d="M248 230L375 260M248 248L375 278M407 259L508 212M407 278L508 231"
+          stroke="#7c8e63"
+          stroke-width="5"
+        />
+      </g>
+      <g data-terminal-fold>
+        <path d="M96 252L232 198L262 225L124 282Z" fill="#e3d1ad" />
+        <path d="M124 282L262 225V254L124 309Z" fill="#acb58a" />
+        <path d="M495 207L616 248L593 281L470 238Z" fill="#efdfbe" />
+        <path d="M470 238L593 281V306L470 262Z" fill="#b4bb94" />
+      </g>
+      <g data-terminal-fold>
+        <path d="M500 176L520 167V273L500 282Z" fill="#7f9067" />
+        <path d="M482 160L512 146L544 158L515 173Z" fill="#f4e5c8" />
+        <path d="M482 160L515 173V193L482 179Z" fill="#d6bb8f" />
+        <path d="M515 173L544 158V179L515 193Z" fill="#9aa67b" />
+      </g>
+      <path
+        data-airline
+        d="M99 313C175 260 241 315 318 290S431 305 561 255"
+        stroke="#a44c32"
+        stroke-width="2"
+        fill="none"
+      />
+      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+        <circle
+          data-passenger
+          cx={125 + i * 43}
+          cy={304 - Math.sin(i * 0.75) * 19 - i * 3.5}
+          r="4"
+          fill="#ac593b"
+        />
+      ))}
+      <g data-airport-plane>
+        <path
+          d="M139 182L236 154L174 217L177 191Z"
+          fill="#e8d6b4"
+          stroke="#ac9676"
+        />
+        <path d="M139 182L177 191L236 154" stroke="#8c9875" fill="none" />
+      </g>
+    </svg>
+  </div>
+  <div class="airport-insight">
+    <div>
+      <p class="airport-small">旅客分布示意</p>
+      <p class="airport-insight-title">读懂空间里的线索。</p>
+    </div>
+    <svg viewBox="0 0 250 70" aria-hidden="true">
+      <path
+        data-airport-trend
+        d="M4 58C38 62 41 16 76 26S123 55 146 30S190 15 246 7"
+        fill="none"
+        stroke="#7b8c5e"
+        stroke-width="2"
+      />
+      <path d="M4 65H246" stroke="#c9bca4" />
+    </svg>
+  </div>
+</figure>
+<style is:global>
+  .world-backdrop::after {
+    opacity: var(--world-haze, 1);
+  }
+  .stage-zhifu .scene-copy::before {
+    content: '';
+    position: absolute;
+    inset: -24px -28px;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse,
+      #f5eddff2 15%,
+      #f5eddfa0 58%,
+      transparent 75%
+    );
+  }
+  .stage-zhifu {
+    gap: 3%;
+  }
+  .stage-zhifu .scene-copy {
+    width: 28%;
+    align-self: flex-end;
+    padding-bottom: 8%;
+  }
+  .airport-stage {
+    position: relative;
+    width: 67%;
+    flex-shrink: 0;
+    height: 470px;
+    margin: 0;
+  }
+  .airport-coordinate {
+    position: absolute;
+    top: 1%;
+    left: 8%;
+    font-size: 8px;
+    letter-spacing: 0.16em;
+  }
+  .airport-model {
+    width: 100%;
+    height: 86%;
+    transform-origin: center bottom;
+  }
+  .airport-model svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .airport-model [data-terminal-fold] {
+    transform-box: fill-box;
+    transform-origin: center bottom;
+  }
+  html.story-active:has(#world-canvas[data-world='ready']) .airport-model {
+    opacity: 0 !important;
+  }
+  .airport-insight {
+    position: absolute;
+    left: 8%;
+    bottom: -1%;
+    width: 85%;
+    padding: 17px 24px;
+    display: flex;
+    align-items: end;
+    gap: 7%;
+    background: #f9f2e4;
+    border-bottom: 1px solid #c8baa0;
+  }
+  .airport-small {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
+  .airport-insight-title {
+    margin-top: 7px;
+    font: 23px/1.4 var(--serif);
+  }
+  .airport-insight svg {
+    width: 39%;
+    height: 55px;
+  }
+  @media (max-width: 1023px) {
+    .airport-stage {
+      height: 390px;
+    }
+    .airport-insight {
+      padding: 14px;
+    }
+    .airport-insight-title {
+      font-size: 19px;
+    }
+  }
+  @media (max-width: 767px) {
+    .airport-stage {
+      width: 100%;
+      height: 210px;
+      flex: 0 0 210px;
+    }
+    .stage-zhifu .scene-copy {
+      width: 100%;
+      padding: 0;
+      align-self: stretch;
+    }
+    .airport-coordinate {
+      font-size: 6px;
+      top: -5px;
+    }
+    .airport-insight {
+      padding: 9px 12px;
+      width: 89%;
+      left: 5%;
+    }
+    .airport-small {
+      font-size: 7px;
+    }
+    .airport-insight-title {
+      font-size: 15px;
+      margin-top: 3px;
+    }
+    .airport-insight svg {
+      height: 32px;
+    }
+  }
+  @media (max-height: 650px) and (max-width: 767px) {
+    .airport-stage {
+      height: 155px;
+      flex-basis: 155px;
+    }
+    .airport-insight {
+      padding: 7px 11px;
+    }
+    .airport-insight-title {
+      font-size: 13px;
+    }
+    .airport-small {
+      font-size: 6px;
+    }
+    .airport-insight svg {
+      height: 25px;
+    }
+  }
+  @media (max-height: 580px) and (min-width: 768px) {
+    .airport-stage {
+      height: 240px;
+    }
+    .airport-insight {
+      padding: 9px 13px;
+    }
+    .airport-insight-title {
+      font-size: 16px;
+    }
+    .airport-insight svg {
+      height: 35px;
+    }
+    .stage-zhifu .scene-copy {
+      padding-bottom: 2%;
+    }
+  }
+</style>

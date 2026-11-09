@@ -6,6 +6,7 @@ import Book from './props/Book.astro';
 import JournalStage from './stages/JournalStage.astro';
 import KnowledgeStage from './stages/KnowledgeStage.astro';
 import FieldStage from './stages/FieldStage.astro';
+import AirportStage from './stages/AirportStage.astro';
 import Knowledge from './props/Knowledge.astro';
 import Farm from './props/Farm.astro';
 import Airport from './props/Airport.astro';
@@ -25,12 +26,7 @@ const projects = (await getCollection('projects')).sort(
 
 {projects.map(({ id, data }) => (
   <section
-    class:list={[
-      'story-panel',
-      'project-panel',
-      `stage-${id}`,
-      { 'image-right': data.order % 2 === 0 },
-    ]}
+    class:list={['story-panel', 'project-panel', `stage-${id}`]}
     id={`project-${id}`}
     data-story-panel
     data-project={id}
@@ -42,6 +38,8 @@ const projects = (await getCollection('projects')).sort(
       <KnowledgeStage />
     ) : id === 'heyue' ? (
       <FieldStage />
+    ) : id === 'zhifu' ? (
+      <AirportStage />
     ) : (
       <div class="preview-collage">
         <div class="paper-piece piece-a" data-piece></div>
