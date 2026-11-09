@@ -2,6 +2,7 @@ import { gsap } from 'gsap';
 import { storyScenes } from './story-data';
 import { stageProps, connectStages } from './choreography';
 import { personalChapters } from './personal-chapters';
+import { choreographProject } from './project-scenes';
 
 export function createStoryTimeline(
   stage: HTMLElement,
@@ -15,6 +16,16 @@ export function createStoryTimeline(
     const panel = document.getElementById(scene.id)!;
     const entry = scene.id === 'journey' ? 2 : scene.read - scene.start;
     const exit = scene.end - scene.leave;
+    if (choreographProject(timeline, panel, scene, desktop)) {
+      timeline.fromTo(
+        panel,
+        { autoAlpha: 0 },
+        { autoAlpha: 1, duration: 0.35 },
+        scene.start,
+      );
+      timeline.to(panel, { autoAlpha: 0, duration: 0.4 }, scene.end - 0.4);
+      return;
+    }
     stageProps(timeline, panel, scene);
     const animateFrom = (
       selector: string,
