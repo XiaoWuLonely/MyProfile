@@ -26,6 +26,7 @@ export function initializeStory() {
   let preserved = hashProgress() ?? 0;
   let switching = true;
   let first = true;
+  let generation = 0;
   let frame = 0;
   let timer: ReturnType<typeof setTimeout>;
   let size = { width: innerWidth, height: innerHeight };
@@ -42,6 +43,8 @@ export function initializeStory() {
     jump?.(p);
   };
   const mount = () => {
+    size = { width: innerWidth, height: innerHeight };
+    const currentGeneration = generation;
     if (reading || reduce.matches) {
       document.documentElement.dataset.experience = 'reading';
       history.scrollRestoration = originalRestoration;
@@ -77,13 +80,20 @@ export function initializeStory() {
       stage.dataset.intro = 'done';
     };
     const render = () => {
-      if (disposed || switching || refreshing) return;
+      if (
+        disposed ||
+        switching ||
+        refreshing ||
+        currentGeneration !== generation
+      )
+        return;
       if (
         reduce.matches ||
         innerWidth !== mountedSize.width ||
         Math.abs(innerHeight - mountedSize.height) >= 120
       ) {
         switching = true;
+        generation++;
         clearTimeout(timer);
         timer = setTimeout(rebuild, 120);
         return;
@@ -130,9 +140,11 @@ export function initializeStory() {
       const previous = refreshing;
       refreshing = true;
       const target = trigger.start + ((trigger.end - trigger.start) * p) / 100;
+      // Native scroll positions are pixel-quantized; repeating the same target
+      // would re-arm ScrollSmoother's proxy without producing a scroll event.
       if (
-        Math.abs(smooth.scrollTop() - target) > 0.01 ||
-        Math.abs(scrollY - target) > 0.5
+        Math.abs(smooth.scrollTop() - target) > 1 ||
+        Math.abs(scrollY - target) > 1
       ) {
         smooth.scrollTop(target);
         smooth.scrollTrigger.update();
@@ -168,7 +180,7 @@ export function initializeStory() {
     ScrollTrigger.refresh();
     restore(preserved);
     frame = requestAnimationFrame(() => {
-      if (disposed || !trigger) return;
+      if (disposed || !trigger || currentGeneration !== generation) return;
       restore(preserved);
       switching = false;
       ready = true;
@@ -243,6 +255,7 @@ export function initializeStory() {
   };
   const rebuild = () => {
     clearTimeout(timer);
+    generation++;
     switching = true;
     const p = preserved;
     // Cancel any native smooth-scroll left by the reading layout before rebuilding.
@@ -278,6 +291,7 @@ export function initializeStory() {
         return;
       size = { width: innerWidth, height: innerHeight };
       switching = true;
+      generation++;
       clearTimeout(timer);
       timer = setTimeout(rebuild, 120);
     },
