@@ -4,7 +4,9 @@ import '@fontsource/cormorant-garamond/500.css';
 import '@fontsource/cormorant-garamond/500-italic.css';
 import '../styles/global.css';
 import '../styles/story.css';
+import '../styles/personal-paper.css';
 import StoryProjects from '../components/StoryProjects.astro';
+import StoryHandoffs from '../components/StoryHandoffs.astro';
 import plant from '../assets/botanical-cutout.png';
 const chapters = [
   ['works', '作品'],
@@ -163,11 +165,7 @@ const years = [
               </span>
             </section>
             <StoryProjects />
-            <div class="story-bridge" aria-hidden="true">
-              <svg viewBox="0 0 300 90">
-                <path d="M10 62Q65 8 145 42T290 25" />
-              </svg>
-            </div>
+            <StoryHandoffs />
             <section
               class="story-panel about-panel"
               id="about"

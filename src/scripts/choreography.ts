@@ -1,13 +1,6 @@
-import { gsap } from 'gsap';
-interface Scene {
-  id: string;
-  start: number;
-  read: number;
-  leave: number;
-  end: number;
-}
+import type { Timeline, Scene } from './stages/types';
 export function stageProps(
-  timeline: gsap.core.Timeline,
+  timeline: Timeline,
   panel: HTMLElement,
   scene: Scene,
 ) {
@@ -126,50 +119,4 @@ export function stageProps(
       },
       scene.leave,
     );
-}
-
-export function connectStages(timeline: gsap.core.Timeline) {
-  const bridge = document.querySelector('.story-bridge');
-  if (!bridge) return;
-  gsap.set(bridge, { opacity: 0 });
-  for (const [from, to] of [
-    [3, 11],
-    [17, 23],
-    [29, 35],
-    [41, 47],
-    [53, 59],
-    [65, 71],
-    [77, 81],
-    [91, 96],
-  ]) {
-    const half = (to - from) / 2;
-    timeline.fromTo(
-      bridge,
-      { xPercent: -90, y: 70, rotation: -22, scale: 0.35, opacity: 0 },
-      {
-        xPercent: 0,
-        y: 0,
-        rotation: 5,
-        scale: 1,
-        opacity: 0.9,
-        duration: half,
-        ease: 'power2.inOut',
-        immediateRender: false,
-      },
-      from,
-    );
-    timeline.to(
-      bridge,
-      {
-        xPercent: 100,
-        y: -80,
-        rotation: 25,
-        scale: 0.5,
-        opacity: 0,
-        duration: half,
-        ease: 'power2.inOut',
-      },
-      from + half,
-    );
-  }
 }

@@ -1,11 +1,16 @@
 import * as THREE from 'three';
 import { gsap } from 'gsap';
+import { createAirportWorld } from './airport-world';
+import { storyScenes, cameraPosition } from './story-data';
 interface WorldState {
   travel: number;
   progress: number;
 }
 
 export function mountWorld(container: HTMLElement, state: WorldState) {
+  const airportStory = storyScenes.find((s) => s.id === 'project-zhifu')!;
+  const knowledgeStory = storyScenes.find((s) => s.id === 'project-knowflow')!;
+  const airportStop = cameraPosition(airportStory.read);
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('webgl2', {
     alpha: true,
@@ -129,6 +134,7 @@ export function mountWorld(container: HTMLElement, state: WorldState) {
   const foldGeo = new THREE.PlaneGeometry(1.2, 1.9, 1, 1);
   geometries.push(foldGeo);
   for (let i = 0; i < 9; i++) {
+    if (i === airportStop) continue;
     const center = route(i);
     for (let j = 0; j < 3; j++) {
       const fold = new THREE.Mesh(foldGeo, patchMaterials[(i + j) % 4]);
@@ -175,20 +181,64 @@ export function mountWorld(container: HTMLElement, state: WorldState) {
     );
     dummy.rotation.set(0, 0.3 * Math.sin(i), 0.35 * Math.sin(i * 2.3));
     dummy.scale.setScalar(0.3 + (i % 5) * 0.07);
+    if (station === airportStop && side === -1) dummy.scale.setScalar(0);
     dummy.updateMatrix();
     leaves.setMatrixAt(i, dummy.matrix);
   }
   leaves.instanceMatrix.needsUpdate = true;
   scene.add(leaves);
+  const airport = createAirportWorld(paper);
+  const airportCenter = route(cameraPosition(airportStory.read));
+  airport.group.position.set(airportCenter.x - 1.7, 0.1, airportCenter.z);
+  airport.group.rotation.y = 0.1;
+  scene.add(airport.group);
   container.append(canvas);
   let disposed = false;
   let running = false;
   const target = new THREE.Vector3();
   const render = (time: number) => {
     const center = route(state.travel);
-    camera.position.set(center.x - 1, 8.3, center.z + 12);
-    target.set(center.x, 0.1, center.z - 0.2);
+    const peak = (start: number, read: number) => {
+      const t = THREE.MathUtils.clamp(
+        (state.progress - start) / (read - start),
+        0,
+        1,
+      );
+      return Math.sin(t * Math.PI);
+    };
+    const knowledgePeak = peak(knowledgeStory.start, knowledgeStory.read);
+    const airportPeak = peak(airportStory.start, airportStory.read);
+    camera.position.set(
+      center.x - 1 + knowledgePeak * 0.6 - airportPeak * 0.6,
+      8.3 + knowledgePeak * 2.5 - airportPeak * 1.7,
+      center.z + 12 - knowledgePeak - airportPeak * 2.3,
+    );
+    target.set(center.x, 0.1 + airportPeak * 0.5, center.z - 0.2);
+    const fov = 32 - knowledgePeak * 2 - airportPeak * 3;
+    if (camera.fov !== fov) {
+      camera.fov = fov;
+      camera.updateProjectionMatrix();
+    }
     camera.lookAt(target);
+    airport.group.visible =
+      state.progress >= airportStory.start && state.progress < airportStory.end;
+    const airportEntry =
+      (state.progress - airportStory.start) /
+      (airportStory.read - airportStory.start);
+    const airportExit = THREE.MathUtils.clamp(
+      (state.progress - airportStory.leave) /
+        (airportStory.end - airportStory.leave),
+      0,
+      1,
+    );
+    const viewScale = THREE.MathUtils.clamp(camera.aspect / 1.6, 0.72, 1.2);
+    airport.group.position.x = airportCenter.x - 1.7 * viewScale;
+    airport.group.scale.setScalar(0.62 * viewScale * (1 - airportExit * 0.2));
+    const airportStatus = airport.group.visible
+      ? airport.update(airportEntry, airportExit)
+      : 'away';
+    if (container.dataset.airport !== airportStatus)
+      container.dataset.airport = airportStatus;
     leavesMaterial.uniforms.time.value = time;
     renderer.render(scene, camera);
   };
@@ -199,7 +249,7 @@ export function mountWorld(container: HTMLElement, state: WorldState) {
     if (play) gsap.ticker.add(render);
     else gsap.ticker.remove(render);
   };
-  const resize = new ResizeObserver(() => {
+  const resizeView = () => {
     if (disposed) return;
     const w = container.clientWidth,
       h = container.clientHeight;
@@ -207,8 +257,10 @@ export function mountWorld(container: HTMLElement, state: WorldState) {
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     renderer.setSize(w, h, false);
-  });
+  };
+  const resize = new ResizeObserver(resizeView);
   resize.observe(container);
+  resizeView();
   document.addEventListener('visibilitychange', visibility);
   const dispose = () => {
     if (disposed) return;
@@ -218,6 +270,8 @@ export function mountWorld(container: HTMLElement, state: WorldState) {
     document.removeEventListener('visibilitychange', visibility);
     canvas.removeEventListener('webglcontextlost', lost);
     leaves.dispose();
+    airport.dispose();
+    delete container.dataset.airport;
     geometries.forEach((g) => g.dispose());
     materials.forEach((m) => m.dispose());
     grain.dispose();

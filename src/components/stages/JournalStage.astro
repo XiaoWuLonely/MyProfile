@@ -1,0 +1,288 @@
+---
+import { Image } from 'astro:assets';
+import cover from '../../assets/myblog-cover.png';
+---
+
+<figure
+  class="journal-stage"
+  data-stage-art
+  aria-label="从记录到成文的折页长卷"
+>
+  <div class="journal-spread" data-read-pose>
+    <div class="journal-leaf journal-cover" data-journal-leaf>
+      <p class="journal-edition">A PERSONAL JOURNAL / 01</p>
+      <span class="journal-letter" aria-hidden="true">
+        M
+      </span>
+      <p class="journal-cover-title">
+        让好奇，
+        <br />
+        有处安放。
+      </p>
+      <span class="journal-binding" aria-hidden="true"></span>
+    </div>
+    <div class="journal-leaf journal-writing" data-journal-leaf>
+      <p class="journal-edition">WRITE SOMETHING</p>
+      <p class="journal-page-title">
+        写下一点，
+        <br />
+        留下很多。
+      </p>
+      <div class="journal-ink" aria-hidden="true">
+        {Array.from({ length: 8 }, (_, i) => (
+          <span
+            data-journal-ink
+            style={`--line:${i % 3 === 1 ? '70%' : '100%'}`}
+          ></span>
+        ))}
+      </div>
+      <p class="journal-index">技术笔记 · 资源 · 项目想法</p>
+    </div>
+    <div class="journal-leaf journal-image" data-journal-leaf>
+      <p class="journal-edition">COLLECT & CONNECT</p>
+      <Image
+        src={cover}
+        alt="纸页中的记录与收藏意象"
+        widths={[320, 640]}
+        sizes="18vw"
+        format="webp"
+        loading="lazy"
+      />
+      <p class="journal-index">把零散，整理成篇。</p>
+    </div>
+    <div class="journal-leaf journal-last" data-journal-leaf data-transfer-page>
+      <p class="journal-edition">KEEP GROWING</p>
+      <p class="journal-page-title">
+        想法
+        <br />
+        <em>继续生长。</em>
+      </p>
+      <span class="journal-seed" aria-hidden="true">
+        ✳
+      </span>
+      <p class="journal-index">Next.js / Cloudflare / D1</p>
+      <span class="journal-bookmark" aria-hidden="true"></span>
+    </div>
+  </div>
+  <figcaption>
+    记录 <span>→</span> 整理 <span>→</span> 发布
+  </figcaption>
+</figure>
+
+<style is:global>
+  .stage-myblog {
+    gap: 3%;
+  }
+  .stage-myblog .scene-copy {
+    width: 28%;
+  }
+  .journal-stage {
+    position: relative;
+    width: 67%;
+    flex-shrink: 0;
+    margin: 0;
+    perspective: 1400px;
+  }
+  .journal-spread {
+    display: flex;
+    height: clamp(270px, 42vh, 390px);
+    transform: rotate(-2deg);
+    transform-style: flat;
+  }
+  .journal-leaf {
+    position: relative;
+    width: 25%;
+    flex: 0 0 25%;
+    padding: 26px 18px 22px;
+    background: var(--paper-light);
+    box-shadow: 5px 10px 20px #493b1820;
+    transform-origin: left center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid #b6a58b44;
+  }
+  .journal-leaf:nth-child(2n) {
+    background: #eee4d2;
+  }
+  .journal-cover {
+    background: #a44c32;
+    color: #fbf7ed;
+  }
+  .journal-edition {
+    font-size: 8px;
+    line-height: 1.6;
+    letter-spacing: 0.12em;
+  }
+  .journal-letter {
+    font: 150px/0.7 var(--serif);
+    opacity: 0.65;
+  }
+  .journal-cover-title {
+    font: 25px/1.5 var(--serif);
+  }
+  .journal-binding {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 6px;
+    width: 3px;
+    background: #e3baa75c;
+  }
+  .journal-page-title {
+    font: 28px/1.4 var(--serif);
+  }
+  .journal-page-title em {
+    color: var(--rust);
+    font-size: 0.85em;
+  }
+  .journal-ink {
+    display: grid;
+    gap: 9px;
+  }
+  .journal-ink span {
+    display: block;
+    width: var(--line);
+    height: 1px;
+    background: #82775c77;
+    transform-origin: left;
+  }
+  .journal-index {
+    font-size: 9px;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+  .journal-image img {
+    width: 100%;
+    height: 68%;
+    object-fit: cover;
+  }
+  .journal-last {
+    background: #e5dac1;
+  }
+  .journal-seed {
+    align-self: center;
+    font-size: 55px;
+    color: var(--olive);
+  }
+  .journal-bookmark {
+    position: absolute;
+    width: 17px;
+    height: 65px;
+    bottom: -22px;
+    right: 16px;
+    background: var(--rust);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 84%, 0 100%);
+  }
+  .journal-stage figcaption {
+    margin-top: 28px;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.16em;
+  }
+  .journal-stage figcaption span {
+    margin: 0 12px;
+    color: var(--rust);
+  }
+  @media (max-width: 1023px) {
+    .journal-leaf {
+      padding: 20px 12px;
+    }
+    .journal-page-title {
+      font-size: 23px;
+    }
+    .journal-letter {
+      font-size: 110px;
+    }
+  }
+  @media (max-width: 767px) {
+    .journal-stage {
+      width: 91%;
+      margin-inline: auto;
+    }
+    .stage-myblog .scene-copy {
+      width: 100%;
+    }
+    .journal-spread {
+      height: 190px;
+    }
+    .journal-leaf {
+      width: 50%;
+      flex-basis: 50%;
+      padding: 18px 15px;
+    }
+    .journal-leaf:nth-child(n + 3) {
+      display: none;
+    }
+    .journal-letter {
+      font-size: 80px;
+    }
+    .journal-cover-title {
+      font-size: 21px;
+    }
+    .journal-page-title {
+      font-size: 22px;
+    }
+    .journal-ink {
+      gap: 5px;
+    }
+    .journal-edition {
+      font-size: 7px;
+    }
+    .journal-index {
+      font-size: 8px;
+    }
+    .journal-stage figcaption {
+      margin-top: 15px;
+      font-size: 8px;
+    }
+  }
+  @media (max-height: 650px) and (max-width: 767px) {
+    .journal-spread {
+      height: 135px;
+    }
+    .journal-leaf {
+      padding: 12px;
+    }
+    .journal-cover-title,
+    .journal-page-title {
+      font-size: 18px;
+    }
+    .journal-letter {
+      font-size: 48px;
+    }
+    .journal-ink {
+      gap: 4px;
+    }
+    .journal-ink span:nth-child(n + 6) {
+      display: none;
+    }
+    .journal-edition {
+      font-size: 6px;
+    }
+    .journal-stage figcaption {
+      margin-top: 10px;
+    }
+  }
+  @media (max-height: 580px) and (min-width: 768px) {
+    .journal-spread {
+      height: 210px;
+    }
+    .journal-leaf {
+      padding: 15px 10px;
+    }
+    .journal-letter {
+      font-size: 70px;
+    }
+    .journal-cover-title,
+    .journal-page-title {
+      font-size: 20px;
+    }
+    .journal-ink {
+      gap: 6px;
+    }
+    .journal-index {
+      font-size: 8px;
+    }
+  }
+</style>
