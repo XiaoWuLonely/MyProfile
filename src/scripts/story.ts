@@ -1,12 +1,15 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import type { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { storyScenes, storyAnchors, cameraPosition } from './story-data';
 import { createStoryTimeline } from './story-timeline';
 
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
 export const worldState = { progress: 0, travel: 0 };
+
+const desktopScreenCount = 22;
+const mobileScreenCount = 18;
 
 export function initializeStory() {
   const stage = document.querySelector<HTMLElement>('#story-stage');
@@ -16,6 +19,12 @@ export function initializeStory() {
   const reduce = matchMedia('(prefers-reduced-motion:reduce)');
   const reading = new URLSearchParams(location.search).has('reading');
   const panels = [...stage.querySelectorAll<HTMLElement>('[data-story-panel]')];
+  const chapterLabel = document.querySelector('.reading-current');
+  const progressLine = document.querySelector<HTMLElement>(
+    '.reading-line > span',
+  );
+  const navLinks = document.querySelectorAll<HTMLAnchorElement>('.site-nav a');
+  const terrain = stage.querySelector<HTMLElement>('.paper-terrain');
   const hashProgress = () => {
     try {
       return storyAnchors[decodeURIComponent(location.hash.slice(1)) || 'home'];
@@ -31,7 +40,8 @@ export function initializeStory() {
   let timer: ReturnType<typeof setTimeout>;
   let size = { width: innerWidth, height: innerHeight };
   let trigger: ScrollTrigger | undefined;
-  let smoother: ScrollSmoother | undefined;
+  let smootherPlugin: typeof ScrollSmoother | null | undefined;
+  let smootherLoad: Promise<void> | undefined;
   let jump: ((p: number) => void) | undefined;
   let pendingProgress = () => preserved;
   let freezeScroll = () => {};
@@ -39,10 +49,9 @@ export function initializeStory() {
   const originalRestoration = history.scrollRestoration;
   const seek = () => {
     const p = hashProgress();
-    if (p === undefined || !trigger || !smoother) return;
-    clearTimeout(timer);
+    if (p === undefined || reading || reduce.matches) return;
     preserved = p;
-    jump?.(p);
+    if (!switching) jump?.(p);
   };
   const mount = () => {
     size = { width: innerWidth, height: innerHeight };
@@ -56,20 +65,25 @@ export function initializeStory() {
     document.documentElement.classList.add('story-active');
     document.documentElement.dataset.experience = 'journey';
     history.scrollRestoration = 'manual';
-    const smooth = (smoother = ScrollSmoother.create({
-      wrapper: '#smooth-wrapper',
-      content: '#smooth-content',
-      smooth: 0.8,
-      smoothTouch: 0.12,
-      effects: false,
-      // This pinned stage owns geometry refreshes; a second observer can replay
-      // the smoother's previous scrub after the new position has been restored.
-      autoResize: false,
-    }));
-    const timeline = createStoryTimeline(stage, desktop.matches, worldState);
+    const isDesktop = desktop.matches;
+    const smooth = isDesktop
+      ? smootherPlugin?.create({
+          wrapper: '#smooth-wrapper',
+          content: '#smooth-content',
+          smooth: 0.8,
+          effects: false,
+          // The pinned stage owns geometry refreshes and restores the story pose.
+          autoResize: false,
+        })
+      : undefined;
+    const timeline = createStoryTimeline(stage, isDesktop, worldState);
     let disposed = false;
     let ready = false;
     let refreshing = false;
+    let shownProgress = '';
+    let shownScene = '';
+    let shownGroup = '';
+    let shownTravel: number | undefined;
     let observedScrollY = scrollY;
     const collectPendingProgress = () => {
       if (!trigger || Math.abs(scrollY - observedScrollY) <= 1)
@@ -123,36 +137,42 @@ export function initializeStory() {
       observedScrollY = scrollY;
       if (p > 0 && intro) finishIntro();
       worldState.progress = p;
-      worldState.travel = cameraPosition(p);
-      stage.dataset.progress = p.toFixed(3);
-      stage.dataset.travel = worldState.travel.toFixed(4);
-      if (trigger)
-        stage.dataset.scrollDistance = (trigger.end - trigger.start).toFixed(0);
+      const travel = (worldState.travel = cameraPosition(p));
+      const progress = p.toFixed(3);
+      if (progress !== shownProgress) {
+        shownProgress = progress;
+        stage.dataset.progress = progress;
+        if (progressLine) progressLine.style.transform = `scaleX(${p / 100})`;
+      }
+      if (travel !== shownTravel) {
+        shownTravel = travel;
+        stage.dataset.travel = travel.toFixed(4);
+        if (terrain) {
+          const x = Math.sin(travel * 0.8) * -45;
+          const scale = 1 + Math.sin(travel * 0.4) * 0.07;
+          const angle = Math.sin(travel * 0.7) * 2;
+          terrain.style.transform = `translate3d(${x}px, 0, 0) rotate(${angle}deg) scale(${scale})`;
+        }
+      }
       const current =
         storyScenes.find((s) => p >= s.start && p < s.end) ??
         storyScenes.at(-1)!;
+      if (current.id === shownScene) return;
+      shownScene = current.id;
       stage.dataset.scene = current.id;
-      const label = document.querySelector('.reading-current');
-      if (label) label.textContent = current.label;
-      const line = document.querySelector<HTMLElement>('.reading-line > span');
-      if (line) line.style.transform = `scaleX(${p / 100})`;
+      if (chapterLabel && chapterLabel.textContent !== current.label)
+        chapterLabel.textContent = current.label;
       panels.forEach((panel) => {
-        panel.inert = panel.id !== current.id;
+        const inert = panel.id !== current.id;
+        if (panel.inert !== inert) panel.inert = inert;
       });
-      document
-        .querySelectorAll<HTMLAnchorElement>('.site-nav a')
-        .forEach((link) => {
-          const group = current.id.startsWith('project-')
-            ? 'works'
-            : current.id;
-          if (link.hash === `#${group}`)
-            link.setAttribute('aria-current', 'location');
-          else link.removeAttribute('aria-current');
-        });
-      gsap.set('.paper-terrain', {
-        x: Math.sin(worldState.travel * 0.8) * -45,
-        scale: 1 + Math.sin(worldState.travel * 0.4) * 0.07,
-        rotation: Math.sin(worldState.travel * 0.7) * 2,
+      const group = current.id.startsWith('project-') ? 'works' : current.id;
+      if (group === shownGroup) return;
+      shownGroup = group;
+      navLinks.forEach((link) => {
+        if (link.hash === `#${group}`)
+          link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
       });
     };
     timeline.eventCallback('onUpdate', render);
@@ -163,13 +183,19 @@ export function initializeStory() {
       const target = trigger.start + ((trigger.end - trigger.start) * p) / 100;
       // Native scroll positions are pixel-quantized; repeating the same target
       // would re-arm ScrollSmoother's proxy without producing a scroll event.
-      if (
-        Math.abs(smooth.scrollTop() - target) > 1 ||
-        Math.abs(scrollY - target) > 1
-      ) {
-        smooth.scrollTop(target);
-        smooth.scrollTrigger.update();
-        smooth.scrollTrigger.getTween()?.progress(1);
+      if (smooth) {
+        if (
+          Math.abs(smooth.scrollTop() - target) > 1 ||
+          Math.abs(scrollY - target) > 1
+        ) {
+          smooth.scrollTop(target);
+          smooth.scrollTrigger.update();
+          smooth.scrollTrigger.getTween()?.progress(1);
+        }
+      } else if (Math.abs(scrollY - target) > 1) {
+        // Set the native offset through ScrollTrigger to update its scroll cache.
+        trigger.scroll(target);
+        trigger.update();
       }
       timeline.time(p);
       observedScrollY = scrollY;
@@ -178,10 +204,14 @@ export function initializeStory() {
     };
     jump = restore;
     const beginRefresh = () => {
-      if (ready && !switching) refreshing = true;
+      if (!ready || switching) return;
+      // A native scroll can move the viewport before its event updates the timeline.
+      if (!smooth) preserved = collectPendingProgress();
+      refreshing = true;
     };
     const finishRefresh = () => {
       if (!refreshing || disposed || !trigger) return;
+      stage.dataset.scrollDistance = (trigger.end - trigger.start).toFixed(0);
       const p = preserved;
       restore(p);
       refreshing = false;
@@ -193,7 +223,8 @@ export function initializeStory() {
       id: 'paper-story',
       trigger: stage,
       start: 'top top',
-      end: () => `+=${innerHeight * (desktop.matches ? 22 : 18)}`,
+      end: () =>
+        `+=${innerHeight * (isDesktop ? desktopScreenCount : mobileScreenCount)}`,
       pin: stage,
       animation: timeline,
       scrub: true,
@@ -267,17 +298,56 @@ export function initializeStory() {
       trigger?.kill();
       trigger = undefined;
       timeline.revert();
-      smooth.kill();
-      smoother = undefined;
+      smooth?.kill();
       jump = undefined;
       pendingProgress = () => preserved;
       freezeScroll = () => {};
       document.documentElement.classList.remove('story-active');
+      terrain?.style.removeProperty('transform');
       gsap.set(panels, { clearProps: 'opacity,visibility' });
       panels.forEach((panel) => {
         panel.inert = false;
       });
     };
+  };
+  const mountMode = () => {
+    size = { width: innerWidth, height: innerHeight };
+    if (
+      reading ||
+      reduce.matches ||
+      !desktop.matches ||
+      smootherPlugin !== undefined
+    ) {
+      disposeMode = mount();
+      return;
+    }
+    const requestedGeneration = generation;
+    const startY = scrollY;
+    const startProgress = preserved;
+    const startHash = location.hash;
+    smootherLoad ??= import('gsap/ScrollSmoother')
+      .then(({ ScrollSmoother }) => {
+        gsap.registerPlugin(ScrollSmoother);
+        smootherPlugin = ScrollSmoother;
+      })
+      .catch(() => {
+        smootherPlugin = null;
+      });
+    // The static page stays readable during the desktop-only download.
+    void smootherLoad.then(() => {
+      if (events.signal.aborted || generation !== requestedGeneration) return;
+      if (location.hash !== startHash) {
+        preserved = hashProgress() ?? preserved;
+      } else if (
+        (!first || !startHash) &&
+        preserved === startProgress &&
+        Math.abs(scrollY - startY) > 1
+      ) {
+        const delta = (scrollY - startY) / (innerHeight * desktopScreenCount);
+        preserved = gsap.utils.clamp(0, 100, preserved + delta * 100);
+      }
+      disposeMode = mount();
+    });
   };
   const rebuild = () => {
     clearTimeout(timer);
@@ -287,10 +357,11 @@ export function initializeStory() {
     // Cancel any native smooth-scroll left by the reading layout before rebuilding.
     window.scrollTo({ top: scrollY, behavior: 'instant' });
     disposeMode();
+    disposeMode = () => {};
     preserved = p;
     worldState.progress = p;
     worldState.travel = cameraPosition(p);
-    disposeMode = mount();
+    mountMode();
     if (reading || reduce.matches) {
       const current =
         storyScenes.find((s) => p >= s.start && p < s.end) ??
@@ -348,7 +419,7 @@ export function initializeStory() {
     },
     { signal: events.signal },
   );
-  disposeMode = mount();
+  mountMode();
   return () => {
     switching = true;
     events.abort();

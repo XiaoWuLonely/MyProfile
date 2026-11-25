@@ -3,13 +3,8 @@ import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { storyScenes } from './story-data';
 import type { Timeline } from './stages/types';
 import { preparePersonalPaper } from './story-ribbon';
+import { scaledPaperPose, type PaperBox } from './paper-pose';
 gsap.registerPlugin(MotionPathPlugin);
-interface Box {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
 
 export function prepareStoryHandoffs(
   stage: HTMLElement,
@@ -18,7 +13,11 @@ export function prepareStoryHandoffs(
   const layer = stage.querySelector('.story-handoffs');
   if (!layer) return () => {};
   const frame = stage.getBoundingClientRect();
-  const box = (selector: string, fallback?: string, projected = false): Box => {
+  const box = (
+    selector: string,
+    fallback?: string,
+    projected = false,
+  ): PaperBox => {
     let element = stage.querySelector(selector);
     if ((!element || !element.getBoundingClientRect().width) && fallback)
       element = stage.querySelector(fallback);
@@ -69,15 +68,31 @@ export function prepareStoryHandoffs(
     plate = box('.food-plate', undefined, true);
   const actor = (name: string) =>
     layer.querySelector(`[data-handoff="${name}"]`)!;
-  const personalPaper = preparePersonalPaper(stage, box);
+  const handoffPose = (from: PaperBox, to: PaperBox) => {
+    if (desktop) return { from, to };
+    const size = {
+      width: Math.max(to.width, 1),
+      height: Math.max(to.height, 1),
+    };
+    return {
+      from: { ...size, ...scaledPaperPose(from, size) },
+      to: scaledPaperPose(to, size),
+    };
+  };
+  const personalPaper = preparePersonalPaper(stage, box, desktop);
   return (timeline) => {
     const cover = actor('cover');
     const coverEnd = blog.start + (blog.read - blog.start) * 0.25;
-    timeline.set(cover, { ...opening, rotationZ: 5, autoAlpha: 1 }, home.leave);
+    const coverPose = handoffPose(opening, coverTarget);
+    timeline.set(
+      cover,
+      { ...coverPose.from, rotationZ: 5, autoAlpha: 1 },
+      home.leave,
+    );
     timeline.to(
       cover,
       {
-        ...coverTarget,
+        ...coverPose.to,
         rotationZ: -2,
         backgroundColor: '#a44c32',
         duration: coverEnd - home.leave,
@@ -94,15 +109,21 @@ export function prepareStoryHandoffs(
     const docPaper = actor('document');
     const docEnd = knowledge.start + kEntry * 0.2,
       docDuration = docEnd - blog.leave;
+    const docPose = handoffPose(page, doc);
     timeline.set(
       docPaper,
-      { ...page, rotationZ: -2, autoAlpha: 1, '--handoff-paper': '#e5dac1' },
+      {
+        ...docPose.from,
+        rotationZ: -2,
+        autoAlpha: 1,
+        '--handoff-paper': '#e5dac1',
+      },
       blog.leave,
     );
     timeline.to(
       docPaper,
       {
-        ...doc,
+        ...docPose.to,
         rotationZ: -9,
         '--handoff-paper': '#fbf7ed',
         duration: docDuration,
@@ -142,13 +163,19 @@ export function prepareStoryHandoffs(
 
     const threads = actor('threads');
     const threadEnd = field.start + fEntry * 0.25;
-    timeline.set(
-      threads,
+    const threadPose = handoffPose(
       {
         x: network.x + network.width * 0.12,
         y: network.y + network.height * 0.45,
         width: network.width * 0.74,
         height: network.height * 0.25,
+      },
+      terrain,
+    );
+    timeline.set(
+      threads,
+      {
+        ...threadPose.from,
         rotationX: 0,
         rotationZ: 0,
         autoAlpha: 0,
@@ -159,7 +186,7 @@ export function prepareStoryHandoffs(
     timeline.to(
       threads,
       {
-        ...terrain,
+        ...threadPose.to,
         rotationX: 53,
         rotationZ: -16,
         duration: threadEnd - knowledge.leave,
@@ -186,13 +213,21 @@ export function prepareStoryHandoffs(
       duration = flightEnd - field.leave;
     const planeWidth = Math.max(45, Math.min(130, airplane.width)),
       planeHeight = planeWidth * 0.6;
-    const destination = {
+    const flightPose = handoffPose(parcel, {
       x: airplane.x - frame.width * 0.055,
       y: airplane.y + frame.height * 0.025,
-    };
+      width: planeWidth,
+      height: planeHeight,
+    });
+    const { x: planeX, y: planeY, ...planeSize } = flightPose.to;
     timeline.set(
       flight,
-      { ...parcel, rotation: 0, autoAlpha: 0, backgroundColor: '#bd966b' },
+      {
+        ...flightPose.from,
+        rotation: 0,
+        autoAlpha: 0,
+        backgroundColor: '#bd966b',
+      },
       field.leave,
     );
     timeline.to(
@@ -205,21 +240,20 @@ export function prepareStoryHandoffs(
       {
         motionPath: {
           path: [
-            { x: parcel.x, y: parcel.y },
+            { x: flightPose.from.x, y: flightPose.from.y },
             { x: frame.width * 0.65, y: frame.height * 0.3 },
             {
               x: frame.width * 0.25,
               y: frame.height * (desktop ? 0.18 : 0.22),
             },
             { x: frame.width * 0.11, y: frame.height * 0.52 },
-            destination,
+            { x: planeX, y: planeY },
           ],
           curviness: desktop ? 0.9 : 0.7,
           autoRotate: 45,
           fromCurrent: false,
         },
-        width: planeWidth,
-        height: planeHeight,
+        ...planeSize,
         duration,
         ease: 'power1.inOut',
       },
@@ -250,15 +284,16 @@ export function prepareStoryHandoffs(
 
     const wayfinder = actor('sign');
     const menuEnd = food.start + mEntry * 0.18;
+    const signPose = handoffPose(sign, menu);
     timeline.set(
       wayfinder,
-      { ...sign, rotationY: 0, rotationZ: -3, autoAlpha: 1 },
+      { ...signPose.from, rotationY: 0, rotationZ: -3, autoAlpha: 1 },
       airport.leave,
     );
     timeline.to(
       wayfinder,
       {
-        ...menu,
+        ...signPose.to,
         rotationY: 180,
         rotationZ: -6,
         duration: menuEnd - airport.leave,
@@ -274,10 +309,15 @@ export function prepareStoryHandoffs(
 
     const orbit = actor('orbit');
     const plateEnd = food.start + mEntry * 0.34;
-    timeline.set(orbit, { ...trend, autoAlpha: 1 }, airport.leave);
+    const orbitPose = handoffPose(trend, plate);
+    timeline.set(orbit, { ...orbitPose.from, autoAlpha: 1 }, airport.leave);
     timeline.to(
       orbit,
-      { ...plate, duration: plateEnd - airport.leave, ease: 'power2.inOut' },
+      {
+        ...orbitPose.to,
+        duration: plateEnd - airport.leave,
+        ease: 'power2.inOut',
+      },
       airport.leave,
     );
     timeline.to(
